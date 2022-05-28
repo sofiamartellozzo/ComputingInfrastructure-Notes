@@ -725,7 +725,88 @@ HDD + SSD
 \end{itemize}
 
 
-NOW DAS, NAS SAN
+\subsection{Storage system}
+\begin{multicols}{2}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img19.png}
+    \caption{NAS SAN DAS}
+    \label{fig:NAS SAN DAS}
+    \end{center}
+\end{figure}
+\columnbreak
+\begin{defn}
+A {\bf Direct Attached Storage} (DAS) is a storage system directly attached to a server or workstation. They are visible as disks/volumes by the client OS.
+\end{defn}
+\begin{defn}
+A {\bf Network Attached Storage} (NAS) is a computer connected to a network that provides only file-based data storage services (e.g., FTP, Network File System and SAMBA) to other devices on the network and is visible as File Server to the client OS
+\end{defn}
+\begin{defn}
+{\bf Storage Area Networks} (SAN) are remote storage units that are connected to a server using a specific networking technology (e.g., Fiber Channel) and are visible as disks/volumes by the client OS
+Direct Attached Storage (DAS) is a storage system directly
+\end{defn}
+\end{multicols}
+
+
+
+\subsubsection{DAS}
+DAS is a storage system directly attached to a server or workstation\\
+The term is used to differentiate non-networked storage from SAN and NAS (that will be described later).\\
+{\bf Main features}:
+\begin{itemize}
+    \item limited scalability (for ex. if I want 100 server connected, I have to multiply x100 the capacity)
+    \item complex management
+    \item to read files in other machines, the “file sharing” protocol of the OS must be used (on application laver, if I have one Windows and one Linux they must be able to communicate)
+\end{itemize}
+{\bf Internal and external}:
+\begin{itemize}
+    \item DAS does not necessary mean “internal drives” (it could have an external hard disk)
+    \item All the external disks, connected with a point-to-point protocol to a PC can be considered as DAS
+\end{itemize}
+
+\subsubsection{NAS}
+A NAS unit is a computer connected to a network that provides only file-based data storage services to other devices on the network.\\
+NAS systems contain one or more hard disks, often organized into logical redundant storage containers or RAID.\\
+Provide file-access services to the hosts connected to a TCP/IP network though Networked File Systems/SAMBA.\\
+Each NAS element has its own IP address.\\
+Good scalability (incrementing the devices in each NAS element
+or incrementing the number of NAS elements).\\
+\newline
+{\bf NAS vs DAS}\\
+The key differences between direct-attached storage (DAS) and NAS are:
+\begin{itemize}
+    \item DAS is simply an extension of an existing server and is not necessarily networked
+    \item NAS is designed as an easy and self-contained solution for sharing files over the network
+\end{itemize}
+Comparing NAS with local (non-networked) DAS, the {\sl performance} of NAS depends mainly on the speed of and congestion on the network
+
+\subsubsection{SAN}
+Storage Area Networks, are remote storage units that are connected to a PC/server using a specific networking technology.\\
+SANs have a special network devoted to the accesses to storage devices.\\
+Two distinct networks (one TCP/IP and one dedicated network, e.g., Fber Channer).\\
+High scalability (simply increasing the storage devices connected to the SAN network).\\
+\newline
+{\bf NAS vs SAN}\\
+\begin{itemize}
+    \item NAS provides both storage and a file system
+    \item This is often contrasted with SAN which provides only block-based storage and leaves file system concerns on the "client" side
+    \item One way to loosely conceptualize the difference between a NAS and a SAN is that:
+    \begin{itemize}
+        \item NAS appears to the client OS (operating system) as a file server (the client can map network drives to shares on that server)
+        \item a disk available through a SAN still appears to the client OS as a disk: it will be visible in the disks and volumes management utilities (along with client's local disks), and available to be formatted with a file system
+    \end{itemize}
+    \item NAS is used for low-volume access to a large amount of storage by many users
+    \item SAN is the solution for petabytes (1012) of storage and multiple, simultaneous access to files, such as streaming audio/video
+\end{itemize}
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img20.png}
+    \caption{NAS vs SAN vs DAS}
+    \label{fig:NAS,SAN,DAS}
+    \end{center}
+\end{figure}
+
 
 
 
