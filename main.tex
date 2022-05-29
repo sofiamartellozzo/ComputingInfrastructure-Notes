@@ -826,7 +826,7 @@ But if we assume that every server needs to talk to every other server, we need 
     \end{center}
 \end{figure}
 \end{multicols}
-\subsubsection{Architecture}
+\subsection{Architecture}
 \begin{figure}[H]
     \begin{center}
     \includegraphics[width=0.4\textwidth]{img/img22.png}
@@ -879,10 +879,10 @@ Applications (e.g., weather simulations) distribute their data across RAM in all
 Traditional HPC systems have used proprietary interconnects with leading-edge link bandwidths, much lower latencies, and some form of a global address space (where the network is integrated with CPU caches and virtual addresses)\\
 \newline
 High {\bf throughputs} but much more expensive solutions.
-\subsubsection{Network to support Virtualization}
+\subsection{Network to support Virtualization}
 Connection endpoints (i.e., IP address/port combinations) can move from one physical machine to another\\ 
 Typical networking hardware as well as network management software don’t anticipate such moves and in fact often explicitly assume that they’re not possible \\ (All machines in a given rack have IP addresses in a common subnet, which simplifies administration and minimizes the number of required forwarding table entries routing tables)\\ \underline{Solution}: the cluster manager that decides the placement of computations also updates the network state through programmable Network control planes (Software Defined Networks)
-\subsubsection{The interplay of storage and networking technology}
+\subsection{The interplay of storage and networking technology}
 The success of WSC distributed storage systems can be partially attributed to the evolution of data center networking fabrics:{\sl disk locality is no longer relevant in intra-data center computations}.\\
 This observation enables:
 \begin{itemize}
@@ -890,7 +890,7 @@ This observation enables:
     systems
     \item utilization improvements
 \end{itemize}since any disk byte in a WSC facility can, in principle, be utilized by any task regardless of their relative locality
-\subsubsection{Balanced design}
+\subsection{Balanced design}
 {\sl  Computer architects are trained to solve the problem of finding the right combination of performance and capacity from the various building blocks that make up a WSC}\\ \\
 The right building blocks are apparent only when one considers the entire WSC system.\\
 It is important to characterize the kinds of workloads that will execute on the system with respect to their consumption of various resources.\\
@@ -933,5 +933,120 @@ These discrepancies are much larger than those seen on a single machine, making 
 
 \newpage
 %------------------------------------------------------%
+
+\section{Building and Infrastructures}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.7\textwidth]{img/img26.png}
+    \caption{Main components of a typical data center}
+    \label{fig:Main components}
+    \end{center}
+\end{figure}
+WSC has not just computation, storage and networking; it has other important components related to power delivery, cooling, and building infrastructure that also need to be considered.
+\subsection{Power System}
+In order to protect against power failure, battery and diesel generators are used to backup the external supply.\\ \\
+The UPS typically combines three functions in one system:
+\begin{enumerate}
+    \item contains a transfer switch that chooses the active power input (either utility power or generator power)
+    \item contains some form of energy storage (electrical, chemical, or mechanical) to bridge the time between the utility failure and the availability of generator power
+    \item conditions the incoming power feed, removing voltage spikes or sags, or harmonic distortions in the AC feed
+\end{enumerate}
+\subsection{Cooling System}
+IT equipment generates a lot of heat: the cooling system is usually a very expensive component of the datacenter, and it is composed by coolers, heat-exchangers and cold water tanks.
+\subsubsection{Open-Loop}
+The simplest topology is fresh air cooling (or air economization)— essentially, opening the windows. This is a single «open-loop» system.
+\begin{defn}
+    Free cooling, i.e., open-loop, refers to the use of cold outside air to either help the production of chilled water or directly cool servers. It is not completely free in the sense of zero cost, but it involves very low-energy costs compared to chillers. 
+\end{defn}
+\subsubsection{Closed-Loop}
+\begin{defn}
+    Closed-loop systems come in many forms, the most common being the air circuit on the data center floor.
+\end{defn}
+The goal is to isolate and remove heat from the servers and transport it to a heat exchanger.\\ Cold air flows to the servers, heats up, and eventually reaches a heat exchanger to cool it down again for the next cycle through the servers.
+\begin{multicols}{2}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img27.png}
+    \caption{Closed-loop with two loop}
+    \label{fig:Closed-loop with two loop}
+    \end{center}
+\end{figure}
+\columnbreak
+\subsubsection*{Closed-loop with two loops}
+\begin{itemize}
+    \item The airflow through the underfloor plenum, the racks, and back to the CRAC (a 1960s term for computer room air conditioning) defines the primary air circuit, i.e., the {\bf first loop}.
+    \item The {\bf second loop} (the liquid supply inside the CRACs units) leads directly from the CRAC to external heat exchangers (typically placed on the building roof) that discharge the heat to the environment.
+\end{itemize}
+\end{multicols}
+\subsubsection*{A three-loop system commonly used in large-scale data center}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img28.png}
+    \caption{Closed-loop with three loop}
+    \label{fig:Closed-loop with three loop}
+    \end{center}
+\end{figure}
+A water-cooled {\bf chiller} can be thought of as a water-cooled air conditioner.\\
+\newline
+{\bf Cooling towers} cool a water stream by evaporating a portion of it into the atmosphere. They do not work as well in very cold climates because they need additional mechanisms to prevent ice formation
+\subsubsection{Comparison}
+Each topology presents tradeoffs in complexity, efficiency, and cost:
+\begin{itemize}
+    \item Fresh air cooling can be very efficient but does not work in all climates, requires filtering of airborne particulates, and can introduce complex control problems.
+    \item Two-loop systems are easy to implement, relatively inexpensive to construct, and offer isolation from external contamination, but typically have lower operational efficiency.
+    \item A three-loop system is the most expensive to construct and has moderately complex controls, but offers contaminant protection and good efficiency.
+\end{itemize}
+\subsubsection{In-rack cooling}
+In-rack cooler adds an air-to-water heat exchanger at the back of a rack so the hot air exiting the servers immediately flows over coils cooled by water, essentially reducing the path between server exhaust and CRAC input
+\subsubsection{In-row cooling}
+In-row cooling works like in-rack cooling except the cooling coils are not in the rack, but adjacent to the rack.
+\subsubsection{Liquid cooling}
+We can directly cool server components using \underline{cold plates}, i.e., local liquid-cooled heat sinks:
+\begin{itemize}
+    \item Impractical to cool all compute components with cold plates.
+    \item Components with the highest power dissipation are targeted
+    for liquid cooling while other components are air-cooled.
+\end{itemize}
+The liquid circulating through the heat sinks transports the heat to a liquid-to-air or liquid-to-liquid heat exchanger that can be placed close to the tray or rack, or be part of the data center building (such as a cooling tower).
+\subsubsection*{Container-based}
+Container-based data centers go one step beyond in-row cooling by placing the server racks inside a container (typically 6 to 12 mt long) and integrating heat exchange and power distribution into the container as well.
+
+\subsection{Power consumption}
+Data-center power consumption is an issue, since it can reach several MWs.\\
+Cooling usually requires about half the energy required by the IT equipment (servers + network + disks).\\
+Energy transformation creates also a large amount of energy wasted for running a datacenter.\\
+\begin{itemize}
+    \item DCs consume 3\% of global electricity supply (416.2 TWh > UK’s 300 TWh).
+    \item DCs produce 2\% of total greenhouse gas emissions (same as worldwide air traffic pre-pandemic).
+    \item DCs produce as much CO2 as The Netherlands or Argentina.
+\end{itemize}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.6\textwidth]{img/img29.png}
+    \caption{power consumption}
+    \label{fig:power consumption}
+    \end{center}
+\end{figure}
+\begin{defn}
+    {\bf Power usage effectiveness} (PUE) is the ratio of the total amount of energy used by a DC facility to the energy delivered to the computing equipment
+\end{defn}
+PUE = $\frac{Total Facility Power}{IT Equipment power}$ 
+\newline\newline
+{\bf Total facility power} = covers IT systems (servers, network, storage) + other equipment (cooling, UPS, switch gear, generators, lights, fans, etc.)\\
+{\bf Data Center infrastructure Efficiency} (DCiE): PUE inverse
+\newline\newline
+
+\subsection{Tiers}
+Data-center availability is defined by in four different tier level. Each one has its own requirements.
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.6\textwidth]{img/img30.png}
+    \caption{data-center tiers}
+    \label{fig:tiers}
+    \end{center}
+\end{figure}
+
+\newpage
+%------------------------------------------------------------------%
 
 \end{document}
