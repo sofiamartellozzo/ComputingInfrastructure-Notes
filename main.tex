@@ -215,18 +215,6 @@ Hardware implementation of WSCs might differ significantly each other; However, 
     : how and where to store the information
     \item \color{blue}\textbf{Networking}\color{black}
     : providing internal and external connections
-    \begin{itemize}
-        \item Communication equipment allows network interconnections among the devices.
-    \end{itemize} 
-    They can be: 
-    \begin{itemize}
-        \item Hubs
-        \item Routers
-        \item DNS or DHCP servers
-        \item Load balancers
-        \item Technology switches
-        \item Firewalls
-    \end{itemize}
     \item \color{red}\textbf{Building and Infrastructure}\color{black}
     :WSC has other important components related to power delivery, cooling, and building infrastructure that also need to be considered
 \end{itemize}
@@ -807,15 +795,143 @@ High scalability (simply increasing the storage devices connected to the SAN net
     \end{center}
 \end{figure}
 
-
-
-
 \newpage
 
 %------------------------------------------------------%
+\section{Networking}
+{\sl Communication} equipment allows network interconnections among the devices.\\
+They can be:
+\begin{itemize}
+    \item Hubs
+    \item Routers
+    \item DNS or DHCP servers
+    \item Load balancers
+    \item Technology switches
+    \item Firewalls
+\end{itemize}
+The performance of servers increases over time, the demand for inter-server bandwidth naturally increases as well!\\
+{\sl We can double the aggregate compute capacity or the aggregate storage simply by doubling the number of compute or storage elements}, but how?\\
+Networking has no straightforward horizontal scaling solution.\\
+Doubling leaf bandwidth is easy: with twice as many servers, we’ll have twice as many network ports and thus twice as much bandwidth.
+\begin{multicols}{2}
+\noindent
+But if we assume that every server needs to talk to every other server, we need to deal with {\bf bisection bandwidth}. \begin{defn}The bandwidth across the narrowest line that equally divides the cluster into two parts. Characterizes network capacity since randomly communicating processors must send data across the “middle” of the network
+\end{defn}
+\columnbreak
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.2\textwidth]{img/img21.png}
+    \caption{bisection bandwidth}
+    \label{fig:bisection bandwidth}
+    \end{center}
+\end{figure}
+\end{multicols}
+\subsubsection{Architecture}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img22.png}
+    \caption{Data-center network architectures}
+    \label{fig:DS net architecture}
+    \end{center}
+\end{figure}
+Switches at the access layer can be put into two positions:
+\begin{itemize}
+    \item {\sl Top-Of-the-Rack} (TOR): {\bf Access} switches are put at the top of each rack. The number of cables is limited. The number of ports per switch is also limited (lower costs). However, the scalability is also limited.
+    \item {\sl End-Of-the-Line} (EOL): Switches are positioned one per corridor, at the end of a line of rack. {\bf Aggregation} switches must have a larger number of ports, and longer cables are required (higher costs). However, the system can scale to have a larger number of machines.
+\end{itemize}
+Three layer architecture configures the network in three different
+layers:
+\begin{itemize}
+    \item core
+    \item aggregation
+    \item access
+\end{itemize}
+{\bf Bandwidth} can be increased by increasing the switches at the core and aggregation layers, and by using routing protocols such as Equal Cost Multiple Path (ECMP) that equally shares the traffic among different routes.\\
+\newline
+This solution is very simple, but can be very expensive in large data-centers since:\\
+• Upper layers require faster network equipments. (For example: 1 GB Ethernet at the access layer, 10 GB Ethernet at the aggregation layer, 25 GB Optical connections at the core layer)\\
+• The cost in term of acquisition and energy consumption can be very high\\
+{\sl Another benefit of SANs: a way to tackle network scalability, offload some traffic to a special-purpose network connecting servers to storage units
+}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img23.png}
+        \caption{Fat-tree topologies}
+        \label{fig:Fat-tree topologies}
+        \end{center}
+    \end{figure}
+Fat-tree topologies use a larger number of slower speed switches and connections. In particular, nodes are divided into pods characterized by the same number of nodes and switches.
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img24.png}
+        \caption{D-Cell topology}
+        \label{fig:D-Cell topology}
+        \end{center}
+    \end{figure}
+D-Cell topology, defines the network in recursive way. Cells are organized in levels. Switches connects nodes at the lower level.Some nodes belong to different cells: they perform routing among them to create a higher level cell. 
+\end{multicols}
+\subsubsection{High Performance Clusters}
+High-Performance Computing (HPC) supercomputer clusters often have a much lower ratio of computation to network bandwidth.\\
+\newline
+Applications (e.g., weather simulations) distribute their data across RAM in all nodes, and nodes need to update neighboring nodes after performing relatively few floating-point computations.\\
+Traditional HPC systems have used proprietary interconnects with leading-edge link bandwidths, much lower latencies, and some form of a global address space (where the network is integrated with CPU caches and virtual addresses)\\
+\newline
+High {\bf throughputs} but much more expensive solutions.
+\subsubsection{Network to support Virtualization}
+Connection endpoints (i.e., IP address/port combinations) can move from one physical machine to another\\ 
+Typical networking hardware as well as network management software don’t anticipate such moves and in fact often explicitly assume that they’re not possible \\ (All machines in a given rack have IP addresses in a common subnet, which simplifies administration and minimizes the number of required forwarding table entries routing tables)\\ \underline{Solution}: the cluster manager that decides the placement of computations also updates the network state through programmable Network control planes (Software Defined Networks)
+\subsubsection{The interplay of storage and networking technology}
+The success of WSC distributed storage systems can be partially attributed to the evolution of data center networking fabrics:{\sl disk locality is no longer relevant in intra-data center computations}.\\
+This observation enables:
+\begin{itemize}
+    \item simplifications in the design of distributed disk-based storage
+    systems
+    \item utilization improvements
+\end{itemize}since any disk byte in a WSC facility can, in principle, be utilized by any task regardless of their relative locality
+\subsubsection{Balanced design}
+{\sl  Computer architects are trained to solve the problem of finding the right combination of performance and capacity from the various building blocks that make up a WSC}\\ \\
+The right building blocks are apparent only when one considers the entire WSC system.\\
+It is important to characterize the kinds of workloads that will execute on the system with respect to their consumption of various resources.\\
+Keeping in mind three important considerations:
+\begin{enumerate}
+    \item Smart programmers may be able to restructure their algorithms to
+    better match a more inexpensive design alternative
+    \item The most cost-efficient and balanced configuration for the hardware may be a match with the combined resource requirements of multiple workloads
+    \item Fungible resources tend to be more efficiently used
+\end{enumerate}
+System balance: {\bf Storage Hierarchy}
+\subsubsection*{Example}
+\begin{multicols}{2}
+We assume a system with 5,000 servers, each with 256 GB of DRAM, one 4 TB SSD, and eight 10 TB disk drives.\\
+Each group of 40 servers is connected through a 40-Gbps link to a rack-level switch (TOR)\\
+Each rack has an additional 10-Gbps uplink bandwidth per machine for connecting the rack to the cluster-level switch (AGGREGATION)\\
+Network latency numbers assume a TCP/IP transport, and networking bandwidth values assume that each server is using its fair share of the available cluster-level bandwidth.\\
+For disks, typical commodity disk drive (SA T A) latencies and transfer rates are considered.
+\columnbreak
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img25.png}
+    \caption{Storage Hierarchy}
+    \label{fig:Storage Hierarchy}
+    \end{center}
+\end{figure}
+\end{multicols}
+A large application that requires servers in many racks to operate must deal effectively with large discrepancies in latency, bandwidth, and capacity.\\
+\newline
+These discrepancies are much larger than those seen on a single machine, making it more difficult to program a WSC:
+\begin{itemize}
+    \item A key challenge for architects of WSCs is to smooth out these discrepancies in a cost-efficient manner
+    \item A key challenge for software architects is to build SW infrastructure and services that hide this complexity
+\end{itemize} Three specific comments about SSDs:
+\begin{enumerate}
+    \item Much faster than HDDs
+    \item Demand a high bandwidth
+    \item In the worst case, writes to flash can be several orders of magnitude slower than reads
+\end{enumerate}
 
-
-
-
+\newpage
+%------------------------------------------------------%
 
 \end{document}
