@@ -1049,4 +1049,582 @@ Data-center availability is defined by in four different tier level. Each one ha
 \newpage
 %------------------------------------------------------------------%
 
+\section{Virtualization}
+\subsection{Cloud Computing}
+\begin{defn}
+    A coherent, large-scale, publicly accessible collection of computing, storage, and networking resources. Available via Web service calls through the Internet. Short- or long-term access on a pay-per-use basis
+\end{defn}
+\subsection*{How is Cloud implemented? Virtualization}
+Hardware resources (CPU, RAM, ecc...) are partitioned and shared among multiple {\sl virtual machines} (VMs).\\
+The {\sl virtual machine monitor} (VMM) governs the access to the physical resources among running VMs.\\
+In this way are provided performance, isolation and security.
+\subsection{Virtual Machines}
+\begin{defn}
+    A {\bf Machine} is an execution environment capable of running a program.
+\end{defn}
+\subsection*{What’s the difference between a physical machine and a virtual machine?}
+Start from the {\bf computer architecture}: 
+\begin{itemize}
+    \item Sets of instructions characterized by
+    the levels at which are considered
+    \item OS creates new instructions for programs to access devices/hw
+    \item the set of instructions that a program can use might be structured at different levels\\ (We usually program the software part, exploiting the hardware.)
+\end{itemize}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.5\textwidth]{img/img31.png}
+        \caption{machine levels}
+        \label{fig:machine levels}
+        \end{center}
+    \end{figure}
+    \columnbreak
+The ISA (Instruction Set Architecture) corresponds to {\bf Level 2} in the layered execution model. \\ISA marks the division between hardware and software.
+    \begin{itemize}
+        \item \underline{User ISA}: aspects of the ISA that are visible to an application program (sum, multiplication,..., logical operations, branches, etc...). When application interacts with the HW, User ISA is used.
+        \item \underline{System ISA}: aspects visible to supervisor software (i.e., the OS) which is responsible for managing hardware resources (e.g., hide the complexity of CPUs, define how app access memory, communicate with the HW). When the OS interacts with the HW (Drivers, MM, Sched.), System ISA is used.
+    \end{itemize}
+The ABI (Application binary interface) corresponds to {\bf Level 3} in the layered execution model.\\ Provides a program (via the OS): the hardware resources and services available in a
+system.
+    \begin{itemize}
+        \item \underline{User ISA}: aspects of the ISA that are visible to an application program (sum, multiplication,..., logical operations, branches, etc...).
+        \item \underline{System Calls}: calls that allow programs to interact with shared hardware resources indirectly by OS
+    \end{itemize}
+\end{multicols}
+\begin{defn}
+    A {\bf Virtual Machine} (VM) is a logical abstraction able to provide a virtualized
+execution environment. 
+\end{defn}
+More specifically, a VM:
+\begin{itemize}
+    \item (provides) Identical Software behavior
+    \item (consists in a) Combination of physical machine and virtualizing software
+    \item (may appear as) Different resources than physical machine
+    \item (may result in) Different level of performance
+\end{itemize}
+Its {\bf tasks} are:\\
+• To map virtual resources or states to corresponding physical ones\\
+• To use physical machine instructions/calls to execute the virtual ones.\\ \\
+Two {\bf types} of Virtual Machines:
+\begin{enumerate}
+    \item System VMs
+    \item Process VMs
+\end{enumerate}
+\subsubsection{System VMs}
+The VMM supports the levels 0-2 of the architecture.\\ \\
+Provide a {\sl complete system environment} that can support an operating system (potentially with many user processes)\\
+It provides {\sl operating system} running in it access to underlying hardware resources (networking, I/O, a GUI).\\ \\
+The VM supports the operating system as long as the system environment is alive.\\
+Virtualizing software placed between hardware and software ({\bf emulates the ISA interface} seen by software)\\ \\
+The virtualization software is called VMM ({\bf Virtual Machine Monitor})\\\\
+The VMM can provide its functionality either working {\bf directly} on the hardware, or running {\bf on another OS}.
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img32.png}
+    \caption{System Virtual Machine}
+    \label{fig:System VMs}
+    \end{center}
+\end{figure}
+\subsubsection{Process VMs}
+The runtime software supports the levels 0-3 of the architecture
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img33.png}
+        \caption{Process Virtual Machine}
+        \label{fig:Process VMs}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    Able to support an individual process\\ The virtualizing software is placed at the ABI interface, on top of the OS/hardware combination.\\ The virtualizing software emulates both user-level instructions and operating system calls.\\ The virtualization software is usually called {\bf Runtime Software}.
+\end{multicols}
+\begin{defn}
+    {\bf Host} the underlying platform supporting the environment/system
+\end{defn}
+\begin{defn}
+    {\bf Guest} the software that runs in the VM environment as the guest.
+\end{defn}
+\subsubsection{Process and System VMs}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img34.png}
+    \caption{Different types of Virtualization}
+    \label{fig:types of virtualization}
+    \end{center}
+\end{figure}
+\subsubsection*{Multiprogrammed systems}
+Same ABI / OS:\\
+• VM formed by OS call interface + user ISA\\
+• Common approach of all modern OS for multi user support (Task/Process Manager)\\
+• Each user process is given:
+\begin{itemize}
+    \item the illusion of having a complete machine to itself.
+    \item its own address space and is given access to a file structure
+\end{itemize}
+• OS timeshares and manages HW resources to permit this\\
+• {\bf Arguable is a real VM}
+\subsubsection*{Different ISA / ABI}
+\begin{defn}
+    {\bf Emulation} refers to those software technologies developed to allow an application (or OS) to run in an environment different from that originally intended.
+\end{defn}It is required when the VMs have a different ISA / ABI from the architecture where they are running on.\\Example: Obsolete hardware emulators or other architectures emulators.\\\\
+An {\bf emulator} reads all the bytes included in the memory of system it is going to reproduce.\\
+Interpretation:
+\begin{itemize}
+    \item Interpreter program fetches, decodes, emulate the execution of individual source instruction
+    \item Can be a slow process
+    \item E.g., the Space Invaders (The system was based on the Intel 8080 CPU, with 8KB ROM, 1KB RAM, 7KB VRAM, plus a shift-register to speed up scrolling.)
+\end{itemize}
+\newpage
+\subsubsection*{High-Level Language VM (HLL VMs)}
+\begin{multicols}{2}
+    \underline{Goal}: to have an isolated execution environment for each application (or for different instances of the same application).\\
+    VM Task:
+    \begin{itemize}
+        \item Translates application byte code to OS-specific executable
+        \item Minimize HW/OS-specific feature for platform independence
+    \end{itemize}Applications run normally but: Sandboxed, Can “migrate”, Are not conflicting one another and Are not “installed” in a strict sense\\
+Example: Java Virtual Machine (Java can work on every architecture for which an interpreter, called the Java Runtime Environment (JRE), exists)
+    \columnbreak
+    \noindent
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img35.png}
+        \caption{HLL VMs}
+        \label{fig:HLL VMs}
+        \end{center}
+    \end{figure}
+\end{multicols}
+\subsubsection*{Same ISA}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img36.png}
+        \caption{Classic system VMs}
+        \label{fig:same ISA}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    The VMM is on bare hardware, and virtual machines fit on top.\\
+The VMM can intercept guest OS’s interaction with hardware resources.\\
+The most efficient VM architecture (HW executes the same instructions of VMs)\\
+Two different OSs on the same on the same HW
+\end{multicols}
+
+\subsubsection*{Hosted VM}
+virtualizing software is on top of an existing host operating system.
+
+\subsubsection*{Whole-system VMs}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img37.png}
+        \caption{Whole system VMs}
+        \label{fig:diff ISA}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    Virtualize all software: ISAs are different so both application and OS code require emulation, e.g., via binary translation. (no native execution possible)\\Usually implement the VMM and guest software on top of a conventional host OS running on the hardware.\\the VM software must emulate the entire hardware environment and all the guest ISA operations to equivalent OS call to the Host.\\Example: MS Word and Windows running on a Power PC (not x86 family)
+\end{multicols}
+
+\subsection{Implementation}
+Given a typical layered architecture of a system by {\sl adding layers} between execution stack layers.\\
+Depending on where the new layer is placed, we obtain \underline{different types} of Virtualization.
+\subsubsection{Hardware-level virtualization}Virtualization layer is placed between hardware and OS.\\The interface seen by OS and application might be different from the physical one
+\subsubsection{Application-level virtualization}A virtualization layer is placed between
+the OS and some applications (E.g.: JVM (Java Virtual Machine))\\Provides the same interface to the applications.\\Applications run in their environment, independently from OS
+\subsubsection{System-level virtualization}The virtualization layer provides the interface of a physical machine to a secondary OS and a set of application running in it, allowing them to run on top of an existing OS.\\Placed between the system’s OS and other OS (E.g.: VMware Wks/Player, VirtualBox)\\Enable several OSs to run on a single HW
+
+\subsection{Properties}
+\begin{itemize}
+    \item {\bf Partitioning}: \begin{itemize}
+        \item Execution of multiple OSs on a single physical machine
+        \item Partitioning of resources between the different VMs
+    \end{itemize}
+    \item {\bf Isolation}: \begin{itemize}
+        \item Fault tolerance and security (as at the hardware level)
+        \item Advanced resource control to guarantee performance
+        (managed by the hypervisor)
+    \end{itemize}
+    \item {\bf Encapsulation}: \begin{itemize}
+        \item The entire state of a VM can be saved in a file (e.g., freeze and restart the execution)
+        \item Because a VM is a file, can be copied/moved as a file
+    \end{itemize}
+    \item {\bf HW-independence}: \begin{itemize}
+        \item Provisioning/migration of a given VM on a given physical server .
+    \end{itemize}
+\end{itemize}
+
+\subsection{Virtual Machine Manager (VMM)}
+\begin{defn}
+    An application that: \begin{itemize}
+        \item manages the virtual machines
+        \item mediates access to the hardware resources on the physical host
+        system
+        \item intercepts and handles any privileged or protected instructions
+        issued by the virtual machines
+    \end{itemize}
+\end{defn}
+This type of virtualization typically runs virtual machines whose operating system, libraries, and utilities have been compiled for the same type of processor and instruction set as the physical machine on which the virtual systems are running.
+{\bf Crucial to support Cloud Computing}\\ \newline
+Three terms are used to identify the same thing, some authors gives slightly different meanings:
+\begin{itemize}
+    \item {\sl Virtual Machine Monitor}: the virtualization software
+    \item {\sl Hypervisor}: a virtualization software that runs directly on the hardware
+    \item {\sl Virtual Machine Manager}: a VMM or Hypervisor that is also used to create, configure and maintain virtualized resources.
+    It provides a user-friendly interface to the underlying virtualization software
+\end{itemize}
+\subsubsection*{Hyperversor types}
+\begin{multicols}{4}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.15\textwidth]{img/img38.png}
+        \caption{hyp type1}
+        \label{fig:type1}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \noindent
+    Bare-metal or type 1 hypervisors: akes direct control of the Hardware
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.15\textwidth]{img/img39.png}
+        \caption{hyp type2}
+        \label{fig:type2}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \noindent
+    Hosted or type 2 hypervisors (VMM): reside within a host operating system and leverage code of the host OS (E.g. CPU scheduling, memory management)
+\end{multicols}
+\subsubsection{Type 1 hypervisor}
+\begin{multicols}{4}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img40.png}
+        \caption{monolithic}
+        \label{fig:monolithic}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \noindent
+    Device drivers run within the hypervisor \begin{itemize}
+        \item Better performance
+        \item Better performance isolation
+    \end{itemize}Can run only on hardware for which the hypervisor has drivers
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img41.png}
+        \caption{microkernel}
+        \label{fig:Microkernel}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \noindent
+    Device drivers run within a service VM \begin{itemize}
+        \item Smaller hypervisor
+        \item Leverages driver ecosystem of an existing OS
+        \item Can use 3rd party driver (even if not always easy, recompiling might be required)
+    \end{itemize}
+\end{multicols}
+\subsubsection*{Hacks}
+Sometimes Type I Hypervisor can be used to provide hacks to some OSs.
+Two well-known examples on PC hardware:\begin{enumerate}
+    \item Windows 7 genuine without an official license: the Hypervisor mimics vendor specific hardware on different machines to allow the installation of pre-authorized S.O. copies (e.g., Pre-activated version of Windows on HP machines);
+    \item Mac OS on not-Apple hardware: the Hypervisor emulates the EFI (Extended Firmware Interface) of an Apple hardware on a standard PC.
+\end{enumerate}
+\subsubsection{Type 2 hypervisor}
+They are characterized by at least two OSs running on the same hardware:\begin{itemize}
+    \item The Host OS controls the hardware of the system
+    \item The Guest OS is the one the runs in the VM.
+\end{itemize}
+The VMM runs in the Host OS, while applications run in the Guest OS.\\\\
+There is a Host OS that manages the hardware where the VMM runs.\\
++ More flexible in terms of underlying hardware.\\
++ Simpler to manage and configure (VMM can use
+the Host OS to provide GUI, not only BIOS).\\
+- Special care must be taken to avoid conflict between Host OS and Guest OS (e.g., Virtual Memory).\\
+- The Host OS might consume a non-negligible set of physical resources (e.g., 1 core for the Host OS).
+
+\subsection{Techniques}
+Different ways to implement (system level / same ISA) virtualization:
+\subsubsection{Paravirtualization}
+Guest OS and VMM collaborate:\begin{itemize}
+    \item VMM present to VMs an interface similar but not identical to
+    that of the underlying hardware
+    \item Goal: reduce guest’s executions of tasks too expensive for the virtualized environment (“hooks” allow the guest(s) and host to request and acknowledge tasks which would otherwise be executed in the virtual domain, where execution performance is worse).
+\end{itemize}
+\begin{multicols}{2}
+    \noindent
+    {\bf \color{green}Pros}\color{black}
+    \begin{itemize}
+        \item Simpler VMM
+        \item High Performance
+    \end{itemize}
+    \columnbreak
+    \noindent
+    {\bf \color{red}Cons}\color{black}
+    \begin{itemize}
+        \item Modified Guest OS
+        (Cannot be used with traditional OSs, e.g., available on
+        some Linux Releases)
+    \end{itemize}
+\end{multicols}
+
+\subsubsection{Full Virtualization}
+Provides a complete simulation of the underlying hardware.\begin{itemize}
+    \item the full instruction set
+    \item input/output operations 
+    \item Interrupts
+    \item memory access
+\end{itemize}Some protected instructions are trapped and handled by Hypervisor
+\begin{multicols}{2}
+    \noindent
+    {\bf \color{green}Pros}\color{black}
+    \begin{itemize}
+        \item Running unmodified OS
+    \end{itemize}
+    \columnbreak
+    \noindent
+    {\bf \color{red}Cons}\color{black}
+    \begin{itemize}
+        \item Hypervisor mediation
+        (to allow the guest(s) and host
+        to request and acknowledge tasks which would otherwise be executed in the virtual domain)
+        \item Not on every architecture (requires some hardware support)
+    \end{itemize}
+\end{multicols}
+\subsubsection*{Para VS Full-virtualization}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.3\textwidth]{img/img42.png}
+    \caption{para vs full virtualization}
+    \label{fig:para vs full}
+    \end{center}
+\end{figure}
+
+\subsection{Containers}
+\begin{defn}
+    Containers are pre-configured packages, with everything you need to execute the code (code, libraries, variables and configurations) in the target machine.
+\end{defn}
+The main advantage of containers is that their behavior is predictable, repeatable and immutable:\\
+when I create a "master" container and duplicate it on another server, I know exactly how it will be executed.There are no unexpected errors when moving it to a new machine or between environments.\\\\
+Example: a container for a website,\\
+• We are not required to export/import the development/test/production environments,\\
+• We create a container that contains the site and bring it to the destination environment\\\\
+\subsubsection{Containers and Virtual Machine}
+VM provides hardware virtualization, while containers provide virtualization at the operating system level.\\
+The \underline{main difference} is that the containers share the host system kernel with other containers.
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img43.png}
+    \caption{container vs VMMs}
+    \label{fig:container vs VMMs}
+    \end{center}
+\end{figure}
+\href{https://www.youtube.com/watch?v=cjXI-yxqGTI}{youtube video}
+\subsubsection{Characteristics}
+\begin{itemize}
+    \item Flexible: even the most complex applications can be containerized;
+    \item Light: the containers exploit and share the host kernel;
+    \item Interchangeable: updates and updates can be distributed on the fly;
+    \item Portable: you can create locally, deploy in the Cloud and run anywhere;
+    \item Scalable: it is possible to automatically increase and distribute replicas of the container;
+    \item Stackable: containers can be stacked vertically and on the fly.
+\end{itemize}
+Containers ease the deployment of applications and increase the scalability but they also impose a modular application development where the modules are independent and uncoupled.
+\subsubsection{Usage}
+\begin{itemize}
+    \item Helping make your local development and build workflow faster, more efficient, and more lightweight.
+    \item Running stand-alone services and applications consistently across multiple environments.
+    \item Using Container to create isolated instances to run tests.
+    \item Building and testing complex applications and architectures on a
+    local host prior to deployment into a production environment.
+    \item Building a multi-user Platform-as-a-Service (PAAS) infrastructure.
+    \item Providing lightweight stand-alone sandbox environments for developing, testing, and teaching technologies, such as the Unix shell or a programming language.
+    \item Software as a Service applications.
+\end{itemize}
+
+\newpage
+\subsubsection{Software for “Containers”}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img44.png}
+        \caption{docker}
+        \label{fig:docker}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \begin{itemize}
+        \item Docker aims to create and distribute software inside containers.
+        \item Open source platform of tools that helps to "build, ship and run
+        any app, anywhere”
+        \item Docker is based on a DockerFile (a textual file which contains all the commands that a user can call on the command line to assemble an image). DockerFiles define a compilation process which, if sent to the "Docker build" command, will produce an immutable docker image (a sort of snapshot of the application).
+        \item It is possible to run the docker where the docker daemon is running: e.g., a laptop, a server, in the cloud or a Raspberry PI
+        \item Regardless of where the image is running, the docker will behave in the same way.
+        \item Docker Swarm is the container orchestration tool developed by Docker closely integrated within the Docker ecosystem
+    \end{itemize}
+\end{multicols}
+\begin{multicols}{2}
+    \begin{itemize}
+        \item Kubernetes is a Google open source project
+        \item Recommended for the management of medium and large clusters
+        and complex applications;
+        \item Extensive and customizable solution that allows you to coordinate large-scale node clusters in production more efficiently:\begin{itemize}
+            \item Run containers on many heterogeneous machines;
+            \item Increase or decrease the performance by proportionally
+            modifying (adding or even removing) the containers
+            \item Share the load between containers;
+            \item Start new containers on different machines if a machine fails
+        \end{itemize}
+    \end{itemize}
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img45.png}
+        \caption{kubernetes}
+        \label{fig:kubernetes}
+        \end{center}
+    \end{figure}
+\end{multicols}
+\href{https://www.youtube.com/watch?v=2vMEQ5zs1ko}{youtube video}
+
+\subsection{Theoretical Background: Popek and Goldberg}
+Assumptions:
+\begin{itemize}
+    \item The hardware consists of a processor and a uniformly addressable memory (access time to a memory location is independent of which processor makes the request)
+    \item The processor can operate in system mode (both system and user instructions) or user mode (only user instructions)
+    \item A subset of the instruction set is available only in the system mode
+    \item Memory addressing is done relative to the contents of a relocation register (i.e., a fixed value is added to a virtual address to arrive at a physical memory address).
+    \item No I/O is considered (as I/O could be done in memory).
+\end{itemize}The machine being virtualized is a 4-tuple:\\
+{\bf S = $<$ E, M, P, R $>$}\begin{itemize}
+    \item Executable Storage {\bf E} (conventional addressed memory of size q), i.e., the RAM
+    \item Mode of Operation {\bf M}, i.e., User or System
+    \item Program Counter {\bf P}
+    \item Memory Relocation Bound Register {\bf R} is a pair (l, b)\begin{itemize}
+        \item Physical location l of the virtual memory space
+        \item Bound b, the size/extension of the virtual memory space
+    \end{itemize}
+\end{itemize}If the address a accessed by a program falls outside the bounds indicated by R, a {\sl memory trap} occurs.A context switch is performed:\begin{itemize}
+    \item The current state of the machine is saved in location 0 (Current state is represented by values of (M,P,R))
+    \item Copies the contents of location 0 of another process into M,P, and R. (Context switch)
+\end{itemize}{\bf Instructions are then classified on the basis of their behavior as a function of the state S of the machine.}\\
+\newline
+Classifies the instructions of an ISA into 3 different (and possibly overlapping) groups based on their behavior:\begin{enumerate}
+    \item {\bf Privileged} instructions: Those that trap if the processor is in user mode and do not trap if it is in system mode.\\E.g.:\begin{itemize}
+        \item Load PSW (LPSW): load processor status word (PSW) if in system mode, from processor memory.\\
+        Contains the P bit: specifies if the CPU is in user or system mode\\Critical for the control of the system!
+        \item Set CPU timer (SPT): replaces the CPU interval timer if in system mode\\If executable in user mode, a user program could change the amount of time dedicated to it before swapping occour.
+    \end{itemize}
+To specify instructions that interact with hardware, two categories of special instructions are defined:
+Could affect the correct functioning of the VMM because of their action. Divided into:
+    \item {\bf Control sensitive }instructions: attempt to change the configuration of resources in the system.(e.g.: the physical memory assigned to a program)
+    \item {\bf Behavior sensitive} instructions: those whose behavior or result depends on the configuration of resources (i.e.: the processor's mode affects the outcome)
+\end{enumerate}
+{\bf NOTE}: all of the guest OS software is hence forced to execute in user mode!
+\subsubsection{Requirements}
+System virtualization requires (requirements a VM must have to perform System-Level virtualization):\begin{itemize}
+    \item Equivalence: A program running under the VMM should exhibit a behavior essentially identical to that demonstrated when running on an equivalent machine directly.
+    \item Resource control: The VMM must be in complete control of the virtualized resources (guest cannot modify them).
+    \item Efficiency: A statistically dominant fraction of machine instructions must be executed without VMM intervention.
+\end{itemize}
+{\bf Theorem}: for any conventional (third-generation) computer, a VMM may be constructed if the set of sensitive instructions for that computer is a subset of the set of privileged instructions (i.e., all the control/behavior instructions must be privileged)\\
+\newline
+To build a VMM it is sufficient that all instructions that could affect the correct functioning of the VMM (sensitive instructions) always trap and pass control to the VMM.\begin{itemize}
+    \item Since the VM is in user mode, the execution of sensitive instructions will be trapped by the VMM
+    \item \underline{This guarantees the resource control property.}
+\end{itemize}
+Non-privileged instructions must instead be executed natively (i.e.,
+efficiently).\begin{itemize}
+    \item \underline{This guarantees the efficiency property.}
+\end{itemize}
+Popek and Goldberg theorem provides the theoretical background for implementing a Virtual Machine Monitor using the trap-and-emulate virtualization.\\\\VMs always access the virtual resources using sensitive instructions.\\This allows to trap the guest system, call the VMM which in turn can emulate the resource.\begin{itemize}
+    \item \underline{This ensures the equivalence property.}
+\end{itemize}
+
+\subsection{Implementing full virtualization}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img46.png}
+        \caption{basic computer architecture}
+        \label{fig:basic computer architecture}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    The instruction set is divided into (at least) two categories: Non-Priviledged and Priviledged Instruuctions.\\\\A machine operates in two modes: User and Supervisor
+\end{multicols}
+
+\subsubsection{workflow}
+\begin{multicols}{2}
+    \begin{enumerate}
+        \item The OS starts with the CPU in Supervisor mode.
+        \item The OS using Supervisor privileged instructions defines the memory bounds where application will run.
+        87
+        \item The OS gives the control to the application, changing the CPU to User mode.
+        \item The application runs normally using its non-privileged instructions.
+        \item If the application tries to access memory outside the assigned bounds, the CPU traps them and return the control to the OS for stopping the application and prevent compromising the entire system.
+    \end{enumerate}
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img47.png}
+        \caption{VM environments}
+        \label{fig:VM environments}
+        \end{center}
+    \end{figure}
+\end{multicols}
+\newpage
+\subsubsection{Hardware-Assisted}
+Both AMD and Intel have modified their architectures to support virtualization Intel VT e AMD-V:\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img48.png}
+        \caption{Hardware-Assisted}
+        \label{fig:Hardware-Assisted}
+        \end{center}
+    \end{figure}\columnbreak
+    \begin{itemize}
+        \item a new high privilege ring for the VMM. (VMX root and VMX non-root)
+        \item Hardware transitions from ring 0 to the VMM.
+        \item Processor state is maintained
+        for each guest OS (and the VMM) in separate
+        address spaces
+    \end{itemize}
+\end{multicols}
+\subsubsection{Root operation}
+Two modes of operation for the processor:\begin{itemize}
+    \item VMX root operation (VMM)\begin{itemize}
+        \item Processor behaves as would have if no VT-x
+        \item Can use a whole set of instructions called VMX
+    \end{itemize}
+    \item VMX non-root operation (VM)\begin{itemize}
+        \item Processor limited: critical shared resources are kept under the control
+        of a monitor running in VMX root operation.
+        \item Limitation extended also to the ring 0!   
+    \end{itemize}
+\end{itemize}
+Both support privilege levels 0-3.\\
+Guest software can run in the rings in which it was originally intended to be run: guest OS believes it is running at level 0
+\subsubsection{Transitions}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img49.png}
+    \caption{Transitions}
+    \label{fig:Transitions}
+    \end{center}
+\end{figure}
+VMXON instructions transfer control to VM: state restore from VMCB\\
+Exits occur based on the content of the VMCB\begin{itemize}
+    \item State saved to VMCB
+    \item Exit codes stored in VMCB to simplify VMM\\
+    (E.g., exit due to I/O provide the port number\\
+    E.g., exit due to page fault provide faulting address and access mode)
+\end{itemize}
+
+%------------------------------------------------------------------------%
+
 \end{document}
