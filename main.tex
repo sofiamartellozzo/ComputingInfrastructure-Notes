@@ -1582,7 +1582,7 @@ Popek and Goldberg theorem provides the theoretical background for implementing 
 Both AMD and Intel have modified their architectures to support virtualization Intel VT e AMD-V:\begin{multicols}{2}
     \begin{figure}[H]
         \begin{center}
-        \includegraphics[width=0.2\textwidth]{img/img48.png}
+        \includegraphics[width=0.35\textwidth]{img/img48.png}
         \caption{Hardware-Assisted}
         \label{fig:Hardware-Assisted}
         \end{center}
@@ -1624,6 +1624,210 @@ Exits occur based on the content of the VMCB\begin{itemize}
     (E.g., exit due to I/O provide the port number\\
     E.g., exit due to page fault provide faulting address and access mode)
 \end{itemize}
+\newpage
+%------------------------------------------------------------------------%
+
+\section{Cloud Computing}
+\subsection{Migration from Physical to Virtual}
+\subsection*{Without virtualization:}\begin{itemize}
+    \item Software strongly linked/related with hardware: move/change an application not a easy task
+    \item To isolate failure/crash the classical model is:\begin{itemize}
+        \item 1 server
+        \item 1 operative system (OS)
+        \item 1 application, with a resulting low CPU utilization (10-15\%)
+    \end{itemize} • 
+    \item Low flexibility
+\end{itemize}
+\subsection*{With Virtualization:}
+\begin{itemize}
+    \item Hw-independence: software/hardware no longer strongly related
+    \item High fexibility thanks to pre-built VMs
+    \item OS and applications can be handled as a «single entity»
+\end{itemize}
+{\bf Consolidation Management}: migration from physical to virtual machines, servers are connected one another so it is possible to:\begin{itemize}
+    \item move Virtual Machines, without interrupting the applications running inside ({\bf scalability})
+    \item automatically balances the Workloads according to set limits and guarantees ({\bf automatic scalability})
+    \item Servers and Applications are protected against component and system failure ({\bf high availability})
+\end{itemize}
+\subsection*{Advantages of consolidations}
+\begin{itemize}
+    \item Different OS can run on the same hardware
+    \item Higher hardware utilization\begin{itemize}
+        \item Less hardware is needed (Acquiring costs, Management costs(human resources, power, cooling))
+        \item Green IT-oriented
+    \end{itemize} 
+    \item Continue to use legacy software (e.g., software for WIN on Linux machines thanks to VMs)
+    \item Application independent from the hardware
+\end{itemize}
+
+\subsection{Cloud Computing}
+\begin{defn}
+    Cloud computing is a model for enabling\begin{itemize}
+        \item convenient
+        \item on-demand
+    \end{itemize}network access to a shared pool of configurable computing
+    resources, like for example: Networks, Servers, Storage, Applications and Services\\
+    that can be rapidly provisioned and released with minimal management effort or service provider interaction.
+\end{defn}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img50.png}
+    \caption{Cloud computing}
+    \label{fig:Cloud computing}
+    \end{center}
+\end{figure}
+
+\subsubsection{Cloud Application Layer}
+{\bf SaaS} (Software as a Service)\\
+Users access the services provided by this layer through web-portals,
+and are sometimes required to pay fees to use them.\\
+Cloud applications can be developed on the cloud software environments or infrastructure components.\\\\
+Example: GMail, Google Docs and related apps (online office), SalesForce.com (CRMaaS)
+
+\subsubsection{Cloud Software Environment Layer}
+{\bf PaaS} (Platform as a Service)\\
+Users are application developers.\\
+Providers supply developers with a programming-language-level environment with well-defined a API\begin{itemize}
+    \item Facilitate interaction between environment and apps  \item Accelerate the deployment
+    \item Support scalability
+\end{itemize}
+Examples in Deep Learning: Amazon SageMaker, Microsoft Azure Machine Learning, Google AI: TensorFlow
+\subsubsection{Cloud Software Infrastructure Layer}
+Provides resources to the higher-level layers (i.e., Software and Software Environment)
+Note that Cloud Apps and Cloud SW might bypass Cloud SW Infrastructure: However, this would reduce\begin{itemize}
+    \item Simplicity
+    \item Development efforts
+\end{itemize} 
+\subsubsection*{Computational Resources}
+{\bf IaaS} (Infrastructure or Integration as a Service)
+\begin{multicols}{2}
+    {\bf VM's benefits}\begin{itemize}
+        \item Flexibility
+        \item Super-user (root) access to VM for fine granularity settings and customization of installed sw
+    \end{itemize}
+    \columnbreak
+    {\bf VM's issues}\begin{itemize}
+        \item Performance interference
+        \item Inability to provide strong guarantees about SLAs
+    \end{itemize}
+\end{multicols}
+Examples:\begin{itemize}
+    \item Commercial solutions\begin{itemize}
+        \item Amazon Elastic Cloud (EC2): Full virtualization + Based on Xen 
+        \item Windows Azure. (Not just windows-based: it allows also to start VMs for other OSs.)  
+        \item Google Compute Engine. (Same infrastructure as Google.)
+        \item Rackspace Open Cloud.
+        \item IBM SmartCloud Enterprise.
+        \item HP Enterprise Converged Infrastructure.
+    \end{itemize}
+    \item Open-source projects\begin{itemize}
+        \item Eucalyptus Systems  \item Apache CloudStack 
+        \item Open Stack: The project aims to deliver solutions for all types of clouds (private or public) by being simple to implement, massively scalable, and feature rich.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Storage}
+{\bf DaaS} (Data as a Service)\\
+Allows users to store their data at remote disks and access data anytime from any place.\\
+Facilitates cloud applications to scale beyond their limited servers requirements:\begin{itemize}
+    \item High dependability: availability, reliability, performance (scalability)
+    \item Replication
+    \item Data consistency
+\end{itemize}
+Examples: DropBox, iCloud, GoogleDrive.\\CEPH is an open source solution.
+
+\subsubsection*{Communications}
+{\bf CaaS} (Communication as a Service)\\Communications becomes a vital component in guaranteeing QoS.\\\\CaaS is part of a larger category of services known as software as a service (SaaS), in which vendors offer software products and services over the Internet.\\The core concept of CaaS is that accessing these services over the internet is extremely convenient.\\\\Types of CaaS include Voice over Internet Protocol (VoIP) or internet telephone solutions, and video conferencing services.
+
+\subsection{Types of Clouds}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img51.png}
+    \caption{Cloud types}
+    \label{fig:Cloud types}
+    \end{center}
+\end{figure}
+\subsubsection{Public}
+Large scale infrastructure available on a rental basis\begin{itemize}
+    \item Operating System virtualization (e.g. Xen) provides CPU isolation
+    \item “Roll-your-own” network provisioning provides network isolation
+    \item Locally specific storage abstractions
+\end{itemize}
+Fully customer self-service\begin{itemize}
+    \item Service Level Agreements (SLAs) are advertized
+    \item Requests are accepted and resources granted via web services
+    \item Customers access resources remotely via the Internet
+\end{itemize}
+Accountability is e-commerce based\begin{itemize}
+    \item Web-based transaction
+    \item “Pay-as-you-go” and flat-rate subscription  
+    \item Customer service, refunds, etc.
+\end{itemize}
+
+\subsubsection{Private}
+Internally managed data centers\\
+The organization sets up a virtualization environment on its own servers: in its data center or in the data center of a managed service provider\\Key benefits:\begin{itemize}
+    \item you have total control over every aspect of the infrastructure
+    \item you gain advantages of virtualization
+\end{itemize}
+Issue: It lacks the freedom from\begin{itemize}
+    \item capital investment
+    \item Flexibility (“almost infinite” grow of cloud computing)
+\end{itemize}Useful for companies that have significant existing IT investments
+
+\subsubsection{Community}
+A single cloud managed by several federated organizations.\\Combining together several organizations allows economy of scale.\\Resources can be shared and used by one organization, while the others are not using them.\\\\Technically similar to private cloud: they share the same software and the same issues but a more complex accounting system is however required.\\Hosted locally or externally:\begin{itemize}
+    \item Typically community clouds shares infrastructures of the participants.
+    \item However they can be hosted by a separate specific organization, or only by a small subset of the partners.
+\end{itemize}
+
+\subsubsection{Hybrid}
+Hybrid clouds are the combination of any of the previous types: usually are companies that holds their private cloud, but that they can be subject to unpredictable peaks of load. In this case, the company rents resources from other types of cloud.\\Common interfaces\begin{itemize}
+    \item To simplify the deployment process, the way in which VMs are started, terminated, address is given and storage is accessed, must be as similar as possible.
+    \item Many standards are being developed in this directions, but none is globally accepted yet.
+    \item Currently, the Amazon EC2 model is the one with more compliant infrastructures.
+\end{itemize}
+
+\begin{multicols}{2}
+    \subsection{Advantages of Cloud Computing}
+Cloud computing has many positive aspects:\begin{itemize}
+    \item Lower IT costs
+    \item Improved performance
+    \item Instant software updates
+    \item “Unlimited” storage capacity
+    \item Increased data reliability
+    \item Universal document access
+    \item Device Independence
+\end{itemize}
+\columnbreak
+\subsection{Disdvantages of Cloud Computing}
+However, it can also have some disadvantages:\begin{itemize}
+    \item Requires a constant Internet connection
+    \item Does not work well with low-speed connections
+    \item Features might be limited
+    \item Can be slow
+    \item Stored data might not be secure
+    \item Stored data can be lost
+\end{itemize}
+\end{multicols}
+
+
+\subsection{Fog/Edge Computing}
+\begin{multicols}{2}
+    It stays in the middle between the objects and the cloud: the computation is split. The fog pre-processes the data and, if it is able, it takes a decision, otherwise it sends them to the cloud to exploit its major computation power.
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img52.png}
+        \caption{Fog and Edge Computing}
+        \label{fig:Fog/Edge Comp}
+        \end{center}
+    \end{figure}
+\end{multicols}
+
+
+
+
 
 %------------------------------------------------------------------------%
 
