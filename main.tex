@@ -1825,6 +1825,216 @@ However, it can also have some disadvantages:\begin{itemize}
     \end{figure}
 \end{multicols}
 
+\newpage
+%------------------------------------------------------------------------%
+\section{Machine Learning as a service}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img53.png}
+        \caption{IT perspective for AI}
+        \label{fig:IT perspective for AI}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img54.png}
+        \caption{IT architecture for ML/DL}
+        \label{fig:IT architecture for ML/DL}
+        \end{center}
+    \end{figure}
+\end{multicols}
+
+\begin{multicols}{2}
+    \subsection{Computing Cluster}
+    \begin{itemize}
+        \item Servers (parallelelization and scalability are key to find the best model as well as HW accelerators):\\
+        • General Purpose CPU\\
+        • GPU (TPU)
+        \item Storage (multiple storage systems including
+        distributed/parallel file systems):\\
+        • DirectAttachedStorage\\
+        • NAS\\
+        • SAN\\
+        \item Network (applications are generally non-iterative):\\ • Ethernet
+    \end{itemize}
+    \subsection{Virtual Machine Manager}\begin{itemize}
+        \item Virtualization is carried out through hypervisor (virtual machines) or containers
+        \item Resources are increased by adding more virtual machines (provided that hardware resources are available)
+        \item User can design personalized software environments and scale instances to the needs
+    \end{itemize}Some examples: VMware, Xen, KVM, HyperX, Kubernetes
+    \columnbreak
+    \subsection{Computing Framework}
+    Computing Frameworks are composed by several modules:\begin{itemize}
+        \item Cluster Manager
+        \item Data Storage
+        \item Data processing engine
+        \item Graph computation
+        \item Programming Languages (Java, Python, Scala, R)
+    \end{itemize}
+    An application (e.g., a big-data application) operating in a cluster is distributed among different computing (virtual) machines.\\
+    Examples:\begin{itemize}
+        \item Computing Framework: Hadoop, Spark, Flink
+        \item Scheduling: Apache Mesos, Hadoop YARN
+        \item Storage: HDFS, Hbase, Amazon S3, Cassandra, Mongo DB, Spark SQL
+        \item Data Processing Engine: Spark, Map-Reduce
+    \end{itemize}
+    \subsection{Machine/Deep Learning Framework}
+    \begin{itemize}
+        \item \underline{Machine learning frameworks} cover a variety of learning methods for classification, regression, clustering, anomaly detection, and data preparation, and it may or may not include neural network methods.
+        \item \underline{Deep learning frameworks} cover a variety of neural network topologies with many hidden layers.
+    \end{itemize}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img55.png}
+        \caption{ML/DL frameworks}
+        \label{fig:ML/DL frameworks}
+        \end{center}
+    \end{figure}
+\end{multicols}
+
+Cloud comuputing simplifies the access to ML capabilities for\begin{itemize}
+    \item designing a solution (without requiring a deep knowledge of ML)
+    \item setting up a project (managing demand increases and IT solution)
+\end{itemize}
+To support ML in the Cloud companies as Amazon, Microsoft and Google provide\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img56.png}
+    \end{center}
+\end{figure}
+\begin{multicols}{3}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img57.png}
+        \caption{ML Infrastructure as a Service}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img58.png}
+        \caption{ML Platform as a Service}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img59.png}
+        \caption{ML software as a Service}
+        \end{center}
+    \end{figure}
+\end{multicols}
+
+\begin{multicols}{2}
+    \subsection*{Pros}
+    Cloud computing simplifies the access to ML/DL capabilities for\begin{itemize}
+        \item designing a
+        solution (without requiring a deep knowledge of ML/DL)
+        \item setting up a project (managing
+        demand increases and IT solution)
+    \end{itemize}
+    \columnbreak
+    \subsection*{Cons}
+    \begin{itemize}
+        \item Internet connection
+        \item High Power
+        Consumption
+        \item Privacy and Security
+        \item Latency in making
+        decision
+    \end{itemize}
+\end{multicols}
+Machine and Deep Learning plaforms for IoT and Edge\begin{itemize}
+    \item Increase autonomy
+    \item Reduce decision-making latency 
+    \item Reduce transmission bandwidth 
+    \item Increase energy-efficiency
+    \item Security and Privacy
+\end{itemize}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img60.png}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img61.png}
+        \end{center}
+    \end{figure}
+\end{multicols}
+\newpage
+
+%------------------------------------------------------------------------%
+\section{RAID}
+\subsection*{Redundant Arrays of Independent (Inexpensive) Disks}
+\underline{Disk Arrays}: proposed in the 1980’s [PATTERSON].\\
+Need to increase the {\bf performance}, the {\bf size} and the {\bf reliability} of storage systems.\\\\
+Several {\sl independent} disks that are considered as a single, large,high-performance logical disk (In contrast with the JBOD (Just a Bunch of Disks) method where each disk is a separate device with a different mount point)\\
+The data are {\sl striped} across several disks accessed in parallel:\begin{itemize}
+    \item high data transfer rate: large data accesses (heavy I/O op.)
+    \item high I/O rate: small but frequent data accesses (light I/O op.)
+    \item load balancing across the disks
+\end{itemize}
+Two orthogonal techniques:\begin{enumerate}
+    \item {\bf data striping}: to improve performance
+    \item {\bf redundancy}: to improve reliability
+\end{enumerate}
+
+\subsection{Data striping}
+\begin{defn}
+    {\bf Striping}: data are written sequentially (a vector, a file, a table, ...) in units (stripe unit: bit, byte, blocks) on multiple disks according to a cyclic algorithm ({\sl round robin})
+\end{defn}
+\begin{defn}
+    {\bf stripe unit}: dimension of the unit of data that are written on a single disk
+\end{defn}
+\begin{defn}
+    {\bf stripe width}: number of disks considered by the striping algorithm
+\end{defn}\begin{enumerate}
+    \item multipleindependentI/Orequestswillbeexecutedin parallel by several disks decreasing the queue length (and time) of the disks
+    \item single multiple-block I/O requests will be executed by multiple disks in parallel increasing of the transfer rate of a single request
+\end{enumerate}
+
+\subsection{Redundancy}
+The main {\bf motivation} for the introduction of redundancy: the more physical disks in the array, the larger the size and performance gains; but... the larger the probability of failure of a disk!\\\\The probability of a failure (assuming independent failures) in an array of 100 disks is 100 higher the probability of a failure of a single disk\\(if a disk has an Mean Time To Failure (MTTF) of 200,000 hours (~23 years) an array of 100 disks will show a MTTF of 2000 hours (~ 3 months))
+\begin{defn}
+    {\bf Redundancy}: error correcting codes (stored on disks different from the ones with the data) are computed to tolerate loss due to disk failures
+\end{defn}Since write operations must update also the redundant information,their performance is worse than the one of the traditional writes.
+\subsection{Disks}
+Hard drives are great devices: relatively fast, persistent storage. But them have also limitations:\begin{itemize}
+    \item How to cope with disk failure? Mechanical parts may break over time and sectors may become silently corrupted
+    \item Capacity is limited: managing files across multiple physical devices is cumbersome (can we make 10x 1 TB drives look like a 10 TB drive?)
+\end{itemize}
+\begin{defn}
+    {\bf RAID}: use multiple disks to create the illusion of a large, faster, more reliable disk
+\end{defn}
+\subsection{Externally}
+It looks like a single disk:
+\begin{itemize}
+    \item RAID is transparent
+    \item Data blocks are read/written as usual
+    \item No need for software to explicitly manage multiple disks or perform error checking/recovery
+\end{itemize}
+\subsection{Internally}
+It is a complex computer system:
+\begin{itemize}
+    \item Disks managed by a dedicated CPU + software 
+    \item RAM and non-volatile memory
+    \item Many different configuration options ( RAID levels )
+\end{itemize}
+\subsection{Levels}
+\begin{itemize}
+    \item RAID 0 striping only
+    \item RAID 1 mirroring only\\ RAID 0+1 (nested levels)\\ RAID 1+0 (nested levels)
+    \item {\color{lightgray}RAID 2 bit interleaving (not used)}
+    \item {\color{lightgray}RAID 3 byte interleaving - redundancy (parity disk)}
+    \item RAID 4 block interleaving - redundancy (parity disk)
+    \item RAID 5 block interleaving - redundancy (parity block distributed)
+    \item RAID 6 greater redundancy (2 failed disks are tolerated)
+\end{itemize}
+  
 
 
 
