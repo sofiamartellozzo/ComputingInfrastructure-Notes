@@ -2179,10 +2179,134 @@ Many RAID controllers include a
 \end{itemize}
 \subsubsection*{Decreasing the Cost of Reliability}RAID 1 offers highly reliable data storage but, it uses N / 2 of the array capacity; \\We can achieve the same level of reliability without wasting so much capacity: use information coding techniques to build light-weight error recovery mechanisms!
 
+\subsubsection{Level 4}
+\subsubsection*{Party Drive}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img72.png}
+    \caption{RAID level4}
+    \end{center}
+\end{figure}
+\subsubsection*{Write}
+\begin{enumerate}
+    \item Additive parity
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.35\textwidth]{img/img73.png}
+        \end{center}
+    \end{figure}
+    \item Subtractive parity
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.35\textwidth]{img/img74.png}
+        \end{center}
+    \end{figure}
+\end{enumerate}
+\subsubsection*{Read}
+\begin{multicols}{2}
+Reads (Serial or Random) are not a problem in RAID4\\ Parallelization across all non-parity blocks in the stripe
+\columnbreak
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img75.png}
+    \end{center}
+\end{figure}
+\end{multicols}\
+\begin{multicols}{2}
+    \subsubsection*{Serial Writes}
+    RAID 4 has the same Read and Write write performance.\\Parallelization across all non-parity blocks in the stripe.\begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img76.png}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \subsubsection*{Random Writes}
+    \begin{enumerate}
+        \item Read the target block and the parity block
+        \item Use subtraction to calculate the new parity block
+        \item Write the target block and the parity block
+    \end{enumerate}
+    RAID 4 has terrible write performance: Bottlenecked by the parity drive
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img77.png}
+        \end{center}
+    \end{figure}
+\end{multicols}
+{\bf Capacity}: N - 1\\  Space on the parity drive is lost\\\\
+{\bf Reliability}: 1 drive can fail\\  Massive performance degradation during partial outage\\\\
+{\bf Sequential read and write}: (N-1)*S\\  Parallelization across all non-parity blocks in the stripe\\\\
+{\bf Random read}: (N-1)*R\\  Reads parallelize over all but the parity drive\\\\
+{\bf Random write}: R/2\\  Writes serialize due to the parity drive
+\\ Each write requires 1 read and 1 write of the parity drive, thus R / 2\\\\
 
+\subsubsection{Level 5}
+\subsubsection*{Rotating Party}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img78.png}
+    \caption{RAID level4}
+    \end{center}
+\end{figure}
+\subsubsection*{Random Writes}
+\begin{enumerate}
+    \item Read the target block and the parity block
+    \item Use subtraction to calculate the new parity block
+    \item Write the target block and the parity block
+\end{enumerate}
+Thus, 4 total operations (2 reads, 2 writes); Distributed across all drives
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img79.png}
+    \end{center}
+\end{figure}{\bf Capacity}: N - 1 [same as RAID4]\\\\
+{\bf Reliability}: 1 drive can fail [same as RAID4]\\  Massive performance degradation during partial outage\\\\
+{\bf Sequential read and write}: (N-1)*S [same as RAID4]\\  Parallelization across all non-parity blocks in the stripe\\\\
+{\bf Random read}: N*R [vs (N-1)*R]\\  Reads parallelize over all drives\\\\
+{\bf Random write}: N/4 [vs R/2]\\  Writes parallelize over all drives\\ Each write requires 2 reads and 2 write, hence N / 4\\\\
+{\bf N} = number of drives\\
+{\bf R} = random access speed\\
+{\bf S} = sequential access speed\\
+{\bf D} = latency to access a single disk
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.3\textwidth]{img/img80.png}
+    \caption{Comparison of levels}
+    \end{center}
+\end{figure}
 
+\subsubsection{Level 6}
+More fault tolerance with respect RAID5.\\
+2 concurrent failures are tolerated.\\
+Uses Solomon-Reeds codes with two redundancy schemes : (P+Q) distributed and independent.\\
+N + 2 disks required.\\
+High overhead for writes (computation of parities): each write require 6 disk accesses due to the need to update both the P and Q parity blocks (slow writes).\\
+Minimum set of 4 data disks
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img81.png}
+    \end{center}
+\end{figure}
 
+\subsubsection{Level comparison}
+Best performance and most capacity? -$>$ RAID 0\\
+Greatest error recovery? -$>$ RAID 1 (1+0 or 0+1) or RAID 6\\
+Balance between space, performance, and recoverability? -$>$ RAID 5\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img82.png}
+    \end{center}
+\end{figure}
 
+\subsection{Other Considerations}
+\subsubsection{Many RAID systems include a hot spare}\begin{itemize}
+    \item An idle, unused disk installed in the system
+    \item If a drive fails, the array is immediately rebuilt using the hot spare
+\end{itemize}
+\subsubsection{RAID can be implemented in hardware or software}\begin{itemize}
+    \item Hardware is faster and more reliable...
+    \item But, migrating a hardware RAID array to a different hardware controller almost never works
+    \item Software arrays are simpler to migrate and cheaper, but have worse performance and weaker reliability (Due to the consistent update problem)
+\end{itemize}
 
 
 %------------------------------------------------------------------------%
