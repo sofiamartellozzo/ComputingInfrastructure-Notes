@@ -2034,7 +2034,153 @@ It is a complex computer system:
     \item RAID 5 block interleaving - redundancy (parity block distributed)
     \item RAID 6 greater redundancy (2 failed disks are tolerated)
 \end{itemize}
-  
+
+\subsubsection{Level 0}
+\subsubsection*{Striping, no redundancy}
+\begin{multicols}{2}
+    Data are written on a single logical disk and splitted in several blocks distributed across the disks according to a striping algorithm.\\\\Used where {\bf performance} and {\bf capacity} (rather than {\sl reliability}) are the primary concerns, minimum two drivers required.\\\\
+\underline{lowest cost} because it does not employ redundacy (no error correcting codes are computed and stored)\\
+\underline{best write performance} it does not need to update redundant data and it is parallelized\\
+single disk failure will result in \underline{data loss}\columnbreak
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img62.png}
+    \caption{RAID level 0}
+    \end{center}
+\end{figure}
+\end{multicols}
+\subsubsection*{Striping}
+Key idea: present an array of disks as a single large disk.\\
+Maximize parallelism by striping data cross all N disks.\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img63.png}
+    \end{center}
+\end{figure}
+\subsubsection*{Addressing Blocks}
+How do you access specific data blocks?\\
+{\bf Disk} = logical block number \% number of disks\\
+{\bf Offset} = logical block number / number of disks\\
+Example: read block 11\begin{itemize}
+    \item 11\%4=Disk3
+    \item 11 / 4 = Physical Block 2 (starting from 0)
+\end{itemize}
+\subsubsection*{Chunk Sizing}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img64.png}
+    \end{center}
+\end{figure}
+
+\subsubsection*{Performance}
+As usual, we focus on sequential and random workloads
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img65.png}
+    \end{center}
+\end{figure}
+\begin{itemize}
+    \item Assume disks in the array have sequential transfer rate S.\\Single large transfer:\begin{itemize}
+        \item 10 MB transfer
+        \item S = transfer size / time to access
+        \item 10MB/(7ms+3ms+10MB/50MB/s)=47.62MB/s
+    \end{itemize}
+    \item Assume disks in the array have random transfer rate R.\\Set of small files:\begin{itemize}
+        \item 10 KB transfer
+        \item R = transfer size / time to access
+        \item 10KB/(7ms+3ms+10KB/50MB/s)=0.98MB/s
+    \end{itemize}
+\end{itemize}
+{\bf Capacity}: N\\  All space on all drives can be filled with data\\\\
+{\bf Reliability}: O\\  If any drive fails, data is permanently lost\\  MTTDL = MTTF\\\\
+{\bf Sequential read and write}: N*S\\  Full parallelization across drives\\\\
+{\bf Random read and write}: N*R\\ Full parallelization across all drives
+
+\subsubsection{Level 1}
+\begin{multicols}{2}
+    \subsubsection*{Mirroring}
+    Whenever data is written to a disk it is also duplicated (mirrored) to a second disk (there are always {\bf two copies} of the data), minimum 2 disk drives.\\\\
+    \underline{high reliability}:when a disk fails the second copy is used\\
+    \underline{read of a data}: it can be retrieved from the disk with the shorter queueing, seek, and latency delays\\
+    \underline{fast writes} (no error correcting code should be computed)but still slower than standard disks (due to duplication)\\
+    \underline{high costs} 50 \% of the capacity isused
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img66.png}
+        \caption{RAID Level 1}
+        \end{center}
+    \end{figure}
+\end{multicols}
+\subsubsection*{Mirroring}
+\begin{multicols}{2}
+    In principle, a RAID 1 can mirror the content over more than one disk.\begin{itemize}
+        \item This give resiliency to errors even if more than one disk breaks
+        \item It allows with a voting mechanism to identify errors not reported by the disk controller.
+    \end{itemize}
+    In practice this is never used, because the overhead and costs are too high.\\RAID 0 offers high performance, but zero error recovery. Key idea: make two {\bf copies} of all data.
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.33\textwidth]{img/img67.png}
+        \end{center}
+    \end{figure}
+\end{multicols}However if several disks are available (always in an {\sl even} number), disks could be coupled.\\{\sl The total capacity is halved}.\\Each disk has a mirror; How to organize this? RAID levels can be combined: Raid0+1   Raid1+0
+\newpage
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img68.png}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    RAID levels can be {\bf combined}\\RAID x + y (or xy):\begin{itemize}
+        \item {\sl n x m} disks in total
+        \item Consider \underline{m groups} of \underline{n disks}
+        \item Apply RAID x to each group of n disks
+        \item Apply RAID y considering the m groups as single disks
+    \end{itemize}
+\end{multicols}
+\begin{multicols}{2}
+    \subsubsection{Level 0 + 1}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.5\textwidth]{img/img69.png}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \subsubsection{Level 1 + 0}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.5\textwidth]{img/img70.png}
+        \end{center}
+    \end{figure}
+\end{multicols}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img71.png}
+        \caption{0+1 and 1+0 organizations}
+        \end{center}
+    \end{figure}\columnbreak
+    The blocks are the same but are allocated in a different order\\{\bf Performance} on both RAID 10 and RAID 01 are the same.\\The {\bf storage capacity} of RAID 10 and RAID 01 is the same.\\The main difference is the {\bf fault tolerance} level: for RAID 0+1 is less, for RAID 1+0 is larger.
+\end{multicols}
+{\bf Capacity}: N / 2\\  Two copies of all data, thus half capacity\\\\
+{\bf Reliability}: 1 drive can fail, sometime more\\  If you are lucky, N / 2 drives can fail without data loss\\\\
+{\bf Sequential write}: (N/2)*S\\  Two copies of all data, thus half throughput\\\\
+{\bf Sequential read}: (N/2)*S\\ Half of the read blocks are wasted, thus halving throughput\\\\
+{\bf Random read}: N*R\\  Best case scenario for RAID 1\\ Reads can parallelize across all disks
+\\\\
+{\bf Random write}: (N/2)*R\\ Two copies of all data, thus half throughput\\\\
+\subsubsection*{The Consistent Update Problem}Mirrored writes should be atomic (All copies are written, or none are written); However, this is difficult to guarantee (Example: power failure)\\
+Many RAID controllers include a
+{\bf write-ahead log}\begin{itemize}
+    \item Battery backed, non-volatile storage of pending writes
+    \item A recovery procedure ensures to recover the out-of-sync mirrored copies
+\end{itemize}
+\subsubsection*{Decreasing the Cost of Reliability}RAID 1 offers highly reliable data storage but, it uses N / 2 of the array capacity; \\We can achieve the same level of reliability without wasting so much capacity: use information coding techniques to build light-weight error recovery mechanisms!
+
+
+
 
 
 
