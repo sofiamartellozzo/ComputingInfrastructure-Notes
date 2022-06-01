@@ -12,6 +12,7 @@
 \usepackage[table]{xcolor}
 \usepackage{multicol}
 \usepackage{hyperref}
+\usepackage{amsmath}
 
 \geometry{tmargin=.75in, bmargin=.75in, lmargin=.75in, rmargin = .75in}  
 
@@ -2307,7 +2308,195 @@ Balance between space, performance, and recoverability? -$>$ RAID 5\begin{figure
     \item But, migrating a hardware RAID array to a different hardware controller almost never works
     \item Software arrays are simpler to migrate and cheaper, but have worse performance and weaker reliability (Due to the consistent update problem)
 \end{itemize}
+\newpage
+%------------------------------------------------------------------------%
+\section{Dependability}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.35\textwidth]{img/img83.png}
+    \caption{The scenario}
+    \end{center}
+\end{figure}
+\subsection{Reliability}
+\begin{defn}
+    {\bf Reliability} The ability of a system or component to perform its required functions under stated conditions for a specified period of time
+\end{defn}{\bf R(t)}: probability that the system will operate correctly in a specified operating environment until time t\begin{center}
+    R(t) = P(not failed during [0, t])\\assuming it was operating at time t=0.
+\end{center} 
+t is important\\
+If a system needs to work for slots of ten hours at a time, then ten hours is the reliability target.\\\\{\bf 1 - R(t)}: unreliability, also denoted {\bf Q(t)}\\R(t) is a non-increasing function varying from 1 to 0 over [0,+$\infty$)            $\lim_{x\to\infty} R(t)= 0$ .\\Often used to characterize systems in which even small periods of incorrect behavior are unacceptable\begin{itemize}
+    \item Performance requirements
+    \item Timing requirements
+    \item Extreme safety requirements
+    \item Impossibility or difficulty to repair
+\end{itemize}
 
+\subsection{Availability}
+\begin{defn}
+    {\bf Availability} The degree to which a system or component is operational and accessible when required for use
+\end{defn}Availability = Uptime / (Uptime + Downtime)\\\\{\bf A(t)}: probability that the system will be operational at time t\begin{center}
+    A(t) = P(not failed at time t)
+\end{center}Literally, readiness for service\\Admits the possibility of brief outages\\Fundamentally different from reliability\\\\1 - A(t): unavailability\\When the system is {\sl not repairable}: A(t) = R(t)\\ In general (repairable systems): A(t) $\geqslant$ R(t)\\\\
+{\bf MTTF (Mean Time To Failure)}: mean time before any failure will occur\\
+{\bf MTBF (Mean Time Between Failures)}: mean time between two failures\begin{center}
+    MTBF = $\frac{total operating time}{number of failures}$
+\end{center}
+{\bf FIT}: failures in time\\
+Failure Rate $\lambda = \frac{number of failures}{total operating time}$
+\begin{itemize}
+    \item another way of reporting MTBF
+    \item the number of expected failures per one billion hours ($10^{9}$) of operation for a device  
+    \item MTBF (in h) =109/FIT
+\end{itemize}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img84.png}
+    \end{center}
+\end{figure}
+\subsection{Reliability \& Availability}
+Two different points of view
+“reliability: does not break down ...”
+“availability: even if it breaks down, it is working when needed ...”\\
+Of course they are related: if a system is unavailable it is not delivering the specified system services\\
+It is possible to have systems with low reliability that must be available: system failures can be repaired quickly and do not damage data, low reliability may not be a problem (for example a database management system)\\\\Exploitation of R(t) information is used to compute, for a complex system, its reliability in time, that is the expected lifetime
+(computation of the MTTF)\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img85.png}
+        \caption{Reliability terminology}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    An example: a flying drone with an automatic radar-guided landing system \\{\sl Fault}: electromagnetic disturbances interfere with a radar measurement\\{\sl Error}: the radar-guided landing system calculates a wrong trajectory \\{\sl Failure}: the drone crashes to the ground
+\end{multicols}
+
+\subsection{Reliability Block Diagrams}
+An inductive model where a system is divided into {\sl blocks} that represent distinct elements such as components or subsystems.\\
+Every element in the RBD has its own reliability (previously calculated or modelled)\\
+Blocks are then combined together to model all the possible success paths.\\RBDs are an approach to compute the reliability of a system starting from the reliability of its components
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img86.png}
+        \caption{components in series}
+        \end{center}
+    \end{figure}All components must be healthy for the system to work properly\columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img87.png}
+        \caption{components in parallel}
+        \end{center}
+    \end{figure}If one component is healthy the system works properly
+\end{multicols}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img88.png}
+    \end{center}
+\end{figure}
+
+\subsection{Standby redundancy}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.2\textwidth]{img/img89.png}
+        \end{center}
+    \end{figure}
+    A system may be composed of two parallel replicas:\begin{itemize}
+        \item The primary replica working all time
+        \item The redundant replica (generally disable) that is activated when the primary replica fails
+    \end{itemize}
+    Obviously we need: A mechanism to determine whether the primary replica is working properly or not (on-line self check) and a dynamic switching mechanism to disable the primary replica and activate the redundant one.
+    \columnbreak
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img90.png}
+        \end{center}
+    \end{figure}
+\end{multicols}
+
+\subsection{Dependability}
+\begin{defn}
+    The ability of a system to perform its functionality while exposing:\begin{itemize}
+        \item Reliability: Continuity of correct service
+        \item Availability: Readiness for correct service
+        \item Maintainability: Ability for easy maintainance 
+        \item Safety: Absence of catastrophic consequences
+        \item Security: Confidentiality and integrity of data
+    \end{itemize}
+\end{defn}
+A lot of effort is devoted to make sure the implementation matches specifications, fulfills requirements, meets constraints, optimizes selected parameters (performance, energy, ...).\\Nevertheless, even if all above aspects are satisfied ... things may go wrong: \underline{systems fail}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img91.png}
+    \end{center}
+\end{figure}
+\subsubsection{Failure effects}
+A single system failure may affect a large number of people, it also may have high costs if it impacts economic losses or physical damage. Systems that are not dependable are likely not be used or adopted. Undependable systems may cause information loss with a high consequent recovery cost.
+\subsubsection{When to think about dependability?}
+Both at \begin{itemize}
+    \item design-time: \begin{itemize}
+        \item Analyse the system under design 
+        \item Measure dependability properties 
+        \item Modify the design if required
+    \end{itemize}
+    and at
+    \item runtime: \begin{itemize}
+        \item Detect malfunctions
+        \item Understand causes 
+        \item React
+    \end{itemize}
+\end{itemize}
+Failures {\sl in development} should be avoided\\
+Failures {\sl in operation} cannot be avoided (things break), they must be dealt with.\\Design should take failures into account and guarantee that control and safety are achieved when failures occur.(Effects of such failures should be predictable and deterministic ... not catastrophic)
+\subsubsection{Where to apply dependability?}Once upon a time dependability has been a relevant aspect only for safety-critical and mission-critical application environments (Space, Nuclear, Avionics)
+Huge costs, acceptable only when mandatory.
+\subsubsection*{Non-critical critical systems}a failure during operation can have economic and reputation effects
+(Consumer products)
+\subsubsection*{Mission-critical systems}a failure during operation can have serious or irreversible effects on the mission the system is carrying out\\
+• Satellites\\
+• Automatic Wheather Stations\\
+• Surveillance drones\\
+• Unmanned vehicles
+\subsubsection*{Safety-critical systems}a failure during operation can present a direct threat to human life\\
+• aircraft control systems\\
+• medical instrumentation\\
+• railway signaling\\
+• nuclear reactor control systems
+\subsubsection{Anatomy of the scenarios}Everything has to work properly for the overall system to be working\\
+{\bf the nodes}\begin{itemize}
+    \item computing systems
+    \item sensors and actuators
+\end{itemize}
+{\bf the communication}\begin{itemize}
+    \item network
+\end{itemize}
+{\bf the cloud}\begin{itemize}
+    \item data storage
+    \item data manipulation
+\end{itemize}
+\subsubsection{Failure avoidance paradigm}Conservative design\\
+Design validation\\
+Detailed test (Hardware | Software)\\
+Infant mortality screen \\
+Error avoidance
+\subsubsection{Failure tolerance paradigm}Error detection / error masking during system operation\\ On-line monitoring\\
+Diagnostics\\
+Self-recovery \& self-repair
+
+\subsubsection{Where to work}
+\begin{itemize}
+    \item \underline{technological level}:design and manufacture by employing reliable/robust components\\• Highest dependability\\
+    • High cost\\
+    • Bad performance (generally devices from old generation)
+    \item \underline{architectural level}: integrate normal components using solutions that allow to manage the occurrence of failures\\
+    • High dependability
+    Depending on the\\ • High cost adopted solution\\
+    • Reduced performance\\(these 3 depend on the adopted solution)
+    \item \underline{software/application level}:develop solutions in the algorithms or in the operating systems that mask and recover from the occurrence of failures\\
+    • High dependability
+    Depending on the\\ • High cost adopted solution\\
+    • Reduced performance\\(these 3 depend on the adopted solution)
+\end{itemize}
 
 %------------------------------------------------------------------------%
 
