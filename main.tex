@@ -2705,8 +2705,8 @@ ciFrocrumlaatninygsybsetetmwes ewne tchaenmadopt a\\\\We can associate a service
         \end{center}
     \end{figure}A client server system, dealing with external arrivals, which is architected with three tiers: the first one includes one web server, the second tier includes one application server and the third one includes a database server\\
     Provide a QN model of the system and evaluate the overall throughput considering that the network delay is negligible with respect to the other devices and two different cases:\\
-    1) The only thing we know is that each server should be visited by the application\\
-    2) In the second case we know that the application after visiting the web server requires some operations at the application server and then can go back to the web server and leave the system or can require service at the DBMS and then go back to the application server
+    1.  The only thing we know is that each server should be visited by the application\\
+    2.  In the second case we know that the application after visiting the web server requires some operations at the application server and then can go back to the web server and leave the system or can require service at the DBMS and then go back to the application server
 \subsubsection*{ 
     Closed Networks: Examples}\begin{figure}[H]
         \begin{center}
@@ -2714,6 +2714,84 @@ ciFrocrumlaatninygsybsetetmwes ewne tchaenmadopt a\\\\We can associate a service
             \end{center}
         \end{figure}A client server system, with a finite number of customers, which is architected with three tiers: the first one includes one web server, the second tier includes one application server and the third one includes a database server.\\
         Provide a QN model of the system and evaluate the system throughput considering that Network delay is negligible with respect to the other devices. Model the two different cases previously described.
+
+
+\subsection{Operational laws}
+\begin{defn}
+    {\bf Operational laws} are simple equations which may be used as an abstract representation or model of the average behaviour of almost any system
+\end{defn}The laws are very general and make almost no assumptions about the behaviour of the random variables characterising the system.\\Another advantage of the laws is their simplicity: they can be applied quickly and easily.\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.25\textwidth]{img/img110.png}
+        \end{center}
+    \end{figure}Operational laws are based on observable {\bf variables} - values which we could derive from watching a system over a finite period of time\\We assume that the system receives {\bf requests} from its environment\\Each request generates a {\bf job} or {\bf customer} within the system\\When the job has been processed the system responds to the environment with the completion of the corresponding request\\\\If we observed such an abstract system we might measure the following quantities:\begin{itemize}
+        \item T, the length of {\bf time} we observe the system
+        \item  A, the number of request {\bf arrivals} we observe
+        \item  C, the number of request {\bf completions} we observe
+        \item  B, the total amount of time during which the system is {\bf busy} (B $\leq$ T) 
+        \item  N, the average {\bf number of jobs} in the system
+    \end{itemize}
+    \begin{itemize}
+        \item $\lambda$ = A/T , the {\bf arrival} rate
+        \item X = C /T , the {\bf throughput} or completion rate
+        \item U = B/T, the {\bf utilisation}
+        \item S = B/C, the {\bf mean service time} per completed job
+    \end{itemize}
+\subsubsection{Job flow balanced}
+\begin{defn}
+        {\bf job flow balanced} means that the number of arrivals is equal to the number of completions during an observation period, i.e., A = C
+\end{defn}This is a testable assumption because an analyst can always test whether the assumption holds;It can be strictly satisfied by careful choice of measurement interval.\\\\Note that if the system is job flow balanced the arrival rate will be the same as the completion rate, that is: \begin{center}
+    $\lambda$ = X
+\end{center}\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.3\textwidth]{img/img111.png}
+            \end{center}
+\end{figure}\columnbreak
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img112.png}
+        \end{center}
+\end{figure}
+\end{multicols}
+A system may be regarded as being made up of a number of devices or resources\\Each of these may be treated as a system in its own right from the perspective of operational laws\\An external request generates a job within the system; this job may then circulate between the resources until all necessary processing has been done; as it arrives at each resource it is treated as a request, generating a job internal to that resource.\subsubsection{Little Low}
+\begin{center}
+    N = XR
+\end{center}
+\begin{multicols}{2}
+Little law can be applied to the entire system as well as to some subsystems\\\\
+N = average number of requests in the system\\W denotes the accumulated time in system (jobs- sec) [if there are 3 requests in the system during a 2 second period, then W is 6 request-seconds]\\R the average system residence time per request is: R=W/C\\\\
+If the system throughput is X requests/sec, and each request remains in the system on average for R seconds, then for each unit of time, we can observe on average XR requests in the system
+\columnbreak \begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.36\textwidth]{img/img113.png}
+        \end{center}
+\end{figure}
+\end{multicols}
+Residence time corresponds to our conventional notion of {\bf response time}: the period of time from when a user submits a request until that user's response is returned\\\\
+Back when most processing was done on shared mainframes, think time, Z, was quite literally the length of time that a programmer spent thinking before submitting another job\\ More generally in interactive systems, jobs spend time in the system not engaged in processing, or waiting for processing: this may be because of interaction with a human user, or may be for some other reason\\The think time represents the time between processing being completed and the job becoming available as a request again
+\subsubsection{Interactive Response Time Law}\begin{center}
+    R = N/X - Z
+\end{center}The response time in an interactive system is the residence time minus the think time\\ Note that if the think time is zero, Z=0 and R=N/X,then the interactive response time law simply becomes Little’s Law\\\\
+In an observation interval we can count not only completions external to the system, but also the number of completions at each resource within the system\\
+Note that:\begin{itemize}
+    \item If Ck $>$ C, resource k is visited several times (on average) during each system level request. This happens when there are loops in the model
+    \item If Ck $<$ C, resource k might not be visited during each system level request. This can happen if there are alternatives (i.e. caching of disks)
+    \item If Ck = C, resource k is visited (on average) exactly once every request
+\end{itemize}Ck is the number of completions at resource k\\We define the visit count, Vk , of the k-th resource to be the ratio of the number of completions at that resource to the number of system completions Vk = Ck/C
+\subsubsection{Forced Flow Law}The forced flow law captures the relationship between the different components within a system. It states that the throughputs or flows, in all parts of a system must be proportional to one another.\begin{center}
+    $X_k$ = $V_k$ X
+\end{center}The throughput at the k-th resource is equal to the product of the throughput of the system and the visit count at that resource.
+\subsubsection{Utilisation Law}If we know the amount of processing each job requires at a resource then we can calculate the utilisation of the resource\\ Let us assume that each time a job visits the k-th resource the amount of processing, or service time it requires is Sk\\ Note that service time is not necessarily the same as the response time of the job at that resource: in general a job might have to wait for some time before processing begin\\ The total amount of service that a system job generates at the k-th resource is called the service demand, $D_k$:
+\begin{center}
+    $D_k$ = $S_k$$V_k$
+\end{center}
+Average service time $S_k$ accounts for the average time that a
+job spends in station k when IT IS SERVED\\\\ 
+Average service demand $D_k$ accounts for the average time a job spends in station k during its staying in the system. As seen for the visits, depending on the way in which the jobs move in the system, the demand can be less than, greater than or equal to the average service time of station k\\\\
+The {\bf Response Time} $\widetilde{R_k}$ accounts for the average time spent in station k, when the job enters the corresponding node (i.e., time for the single interaction, e.g. disk request)\\The Residence Time $R_k$ accounts instead for the average time spent by a job at station k during the staying in the system: it can be greater or smaller than the response time depending on the number of visits.\\Note that there is the same relation between Residence Time and Response Time as the one between Demand and Service Time!
+\subsubsection{General Response Time Law}One method of computing the mean response time per job in a system is to apply Little's Law to the system as a whole\\ However, if the mean number of jobs in the system, N, or the system level throughput, X, are not known an alternative method can be used:\begin{center}
+    $R_k$ = $N_k$/X = $V_k$ $\widetilde{R_k}$
+\end{center}
 
  
  
