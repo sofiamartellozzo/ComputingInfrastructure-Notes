@@ -2793,6 +2793,25 @@ The {\bf Response Time} $\widetilde{R_k}$ accounts for the average time spent in
     $R_k$ = $N_k$/X = $V_k$ $\widetilde{R_k}$
 \end{center}
 
+\subsection{Performance bounds}
+Provide valuable insight into the primary factors affecting the performance of computer system\\Can be computed quickly and easily therefore serve as a first cut modeling technique\\Several alternatives can be treated together\\\\
+We will consider single class systems only\\Advantages of bounding analysis:\begin{itemize}
+    \item Highlight and quantify the critical influence of the system {\bf bottleneck}\\\begin{multicols}{2}
+        The resource within a system which has the greatest service demand is known as the bottleneck resource or bottleneck device, and its service demand is maxk {Dk}, denoted Dmax\\The bottleneck resource is important because it limits the possible performance of the system\\This will be the resource which has the highest utilisation in the system
+        \columnbreak
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{img/img114.png}
+                \end{center}
+        \end{figure}
+    \end{multicols}
+    \item Can be computed quickly, even by hand
+    \item Useful in System Sizing:\begin{itemize}
+        \item Based on preliminary estimates (quickness)
+        \item This kind of studies involve typically a large number of candidate configurations with a single critical resource (e.g., CPU) dominant and the other configured accordingly: treated as one alternative
+    \end{itemize}
+    \item Useful for System Upgrades
+\end{itemize} 
  
  
 
