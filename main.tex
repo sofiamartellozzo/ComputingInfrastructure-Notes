@@ -31,7 +31,7 @@
 \newtheorem{cor}{Corollary}
 
 
-\title{Computing Infrastructure: [Course Code]}
+\title{Computing Infrastructure}
 \author{[Sofia Martellozzo]}
 \date{Academic Year 2021-2022}
 
@@ -2497,6 +2497,226 @@ Self-recovery \& self-repair
     Depending on the\\ • High cost adopted solution\\
     • Reduced performance\\(these 3 depend on the adopted solution)
 \end{itemize}
+\newpage
+%------------------------------------------------------------------------%
+\section{Performance}
+\begin{defn}
+    {\bf Computer performance}:The total effectiveness of a computer system, including
+    throughput, individual response time and availability. Can be characterized by the amount of useful work accomplished by a computer system or computer network compared to the time and resources used
+\end{defn}
+\subsection{System quality}
+Common practice: system mostly validated versus {\sl “functional”} requirements rather than versus {\sl quality} ones.\\
+Different (and often not available) {\sl skills} required for quality verification\\
+Short time to market, i.e. quickly available products and infrastructures “seem” to be more attractive nowadays!\\
+Little information related to quality is usually available early in the system lifecycle but its understanding is of great importance from the cost and performance point of view\\(During design and system sizing
+but also during system evolution)
+\subsubsection{How to evaluate system quality}
+\begin{itemize}
+    \item Use of intuition and trend extrapolation: unfortunately, those who possess these qualities in sufficient
+    quantity are rare.\\{\bf Pro}: rapid and flexible\\
+    {\bf Con}: accuracy
+    \item Experimental evaluation of alternatives: experimentation is always valuable, often required, and
+    sometimes the approach of choice.\\It also is expensive - often prohibitively so\\A further drawback: an experiment is likely to yield accurate
+    knowledge of system behavior under one set of assumptions, but
+    not any insight that would allow generalization\\{\bf Pro}: excellent accuracy\\
+    {\bf Con}: laborious and inflexible
+\end{itemize}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.35\textwidth]{img/img92.png}
+    \caption{Quality Evaluation techniques}
+    \end{center}
+\end{figure}
+\subsection{Model-Based Approach}
+\begin{defn}
+    an attempt to distill, from the details of the system, exactly those aspects that are essentials to the system behavior
+\end{defn}
+\begin{multicols}{2}
+    Systems are complex so make an abstraction of the systems: Models.
+\begin{defn}
+    {\bf Model} A representation of a system that is\\
+    • simpler than the actual system\\
+    • captures the essential characteristics\\
+    • can be evaluated to make predictions
+\end{defn}
+\columnbreak
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.35\textwidth]{img/img93.png}
+    \end{center}
+\end{figure}
+\end{multicols}
+\begin{enumerate}
+    \item \underline{Analytical and Numerical techniques}are based on the application of mathematical techniques, which usually exploit results coming from the theory of probability and stochastic process\begin{itemize}
+        \item They are the most efficient and the most precise, but are available only in very limited cases
+    \end{itemize}
+    \item \underline{Simulation techniques}are based on the reproduction of traces of the model\begin{itemize}
+        \item They are the most general, but might also be the less accurate, especially when considering cases in which rare events can occur
+        \item The solution time can also become really large when high accuracy is desired
+    \end{itemize}
+    \item \underline{Hybrid techniques} combine analytical/numerical methods with simulation
+\end{enumerate}
+\subsubsection{Queueing Networks}
+Queueing theory is the theory behind what happens when you have a lot of jobs, scarce resources, and so long queue and delays.
+\begin{defn}
+    {\bf Queueing network modelling} is a particular approach to computer system modelling in which the computer system is represented as a network of queues.A network of queues is a collection of service centers, which represent system resources, and customers, which represent users or transactions
+\end{defn}Queueing theory applies whenever queues come up\\
+Queues in computer systems:\begin{itemize}
+    \item CPU uses a time-sharing scheduler
+    \item Disk serves a queue of requests waiting to read or write blocks
+    \item A router in a network serves a queue of packets waiting to be routed
+    \item Databases have lock queues, where transactions wait to acquire the lock
+    on a record
+\end{itemize}Predicting performance e.g. for capacity planning purposes\\
+Queueing theory is built on an area of mathematics called stochastic modelling and analysis\\{\bf Success of queueing network}: low-level details of a system are largely irrelevant to its high-level performance characteristics
+\subsubsection*{Single queue}
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.4\textwidth]{img/img94.png}
+        \end{center}
+    \end{figure}
+    \columnbreak
+    \begin{itemize}
+        \item The basic scenario for a single queue is that customers, who belong to some population arrive at the service facility
+        \item The service facility has one or more servers which can perform the service required by customers
+        Jane Hillston School of Informatics The University of Edinburgh Scotland Performance Modelling — Lecture 5 Queueing Networks
+        \item If a customer cannot gain access to a server it must join a queue, in a buffer, until a server is available
+        \item When service is complete the customer departs, and the server selects the next customer from the buffer according to the service discipline (queueing policy)
+    \end{itemize}
+\end{multicols}\newpage
+Different aspects characterize queuing models:\begin{itemize}
+    \item {\bf Arrival}\begin{multicols}{2}
+        Arrivals represent jobs entering the system: they specify how fast, how often and which types of jobs does the station service.\\We are interested in the average arrival rate $\lambda$ (req/s)\columnbreak
+        \begin{figure}[H]
+            \begin{center}
+            \includegraphics[width=0.4\textwidth]{img/img95.png}
+            \end{center}
+        \end{figure}
+    \end{multicols}
+    \item {\bf Service} The service part represents the time a job spends being served.
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img96.png}
+        \end{center}
+    \end{figure}The service time is the time which a server spends satisfying a customer\\
+    As with the inter-arrival time, the important characteristics of this time will be its average duration (advanced: the distribution function)\\
+    If the average duration of a service interaction between a server and a customer is 1/$\mu$ then $\mu$ is the maximum service rate.\\\\It can have different number of servers:\begin{itemize}
+        \item {\bf a single server}: the service facility only has the capability to serve one customer at a time; waiting customers will stay in the buffer until chosen for service; how the next customer is chosen will depend on the service discipline
+        \item {\bf an infinite server}: there are always at least as many servers as there are customers, so that each customer can have a dedicated server as soon as it arrives in the facility. There is no queueing, (and no buffer) in such facilities
+    \end{itemize}
+    \begin{multicols}{2}
+        \begin{figure}[H]
+            \begin{center}
+            \includegraphics[width=0.4\textwidth]{img/img97.png}
+            \end{center}
+        \end{figure}\columnbreak
+        Between these two extremes there are multiple server facilities\\These have a fixed number of c servers, each of which can service a customer at any time\\ If the number of customers in the facility is less than or equal to c there will no queueing—each customer will have direct access to a server\\If there are more than c customers, the additional customers will have to wait in the buffer
+    \end{multicols}
+    \item {\bf Queue} If jobs exceed the capacity of parallel processing of the system, they are forced to wait queueing in a buffer\begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img98.png}
+        \end{center}
+    \end{figure}Customers who cannot receive service immediately must wait in the buffer until a server becomes available\\If the buffer has finite capacity there are two alternatives for when the buffer becomes full:\begin{itemize}
+        \item either, the fact that the facility is full is passed back to the arrival process and arrivals are suspended until the facility has spare capacity, i.e. a customer leaves;
+        \item or, arrivals continue and arriving customers are lost (turned away) until the facility has spare capacity again
+    \end{itemize}If the buffer capacity is so large that it never affects the behaviour of the customers it is assumed to be infinite\begin{figure}[H]
+        \begin{center}
+        \includegraphics[width=0.5\textwidth]{img/img99.png}
+        \end{center}
+    \end{figure}When more than one customer is waiting for service, we need a rule for selecting which of the waiting customers will be the next one to gain access to a server\\The commonly used service disciplines are\begin{itemize}
+        \item FCFS first-come-first-serve (or FIFO first-in-first-out)
+        \item LCFS last-come-first-serve (or LIFO last-in-first-out)
+        \item RSS random-selection-for-service
+        \item PRI priority, the assignment of different priorities to elements of a population is one way in which classes are formed
+    \end{itemize}
+    \item {\bf Population} The characteristic of the population which we are interested in is usually the size\\Clearly, if the size of the population is fixed, at some value N, no more than N customers will ever be requiring service at any time\\When the population is finite, the arrival rate of customers will be affected by the number who are already in the service facility (e.g. zero arrivals when all N are all already in the facility)\\When the size of the population is so large that there is no perceptible impact on the arrival process, we assume that the population is infinite\\Ideally, members of the population are indistinguishable from each other\\When this is not the case, we divide the population into classes whose members all exhibit the same behaviour\\Different classes differ in one or more characteristics, for example, arrival rate, service demand\\Identifying different classes is a workload characterisation task
+
+\subsubsection*{Example}Consider a wireless access gateway:\\
+• Measurements have shown that packets arrive at a mean rate of 125
+packets per second, and are buffered\\
+• The gateway takes 2 milliseconds on average to transmit a packet\\
+• The buffer currently has 13 places, including the place occupied by the packet being transmitted and packets that arrive when the buffer is full are lost\\
+• Goal of the modelling and analysis:\\
+ We wish to find out if the buffer capacity which is sufficient to ensure that less than one packet per million gets lost\\\\
+\begin{multicols}{2}
+    A single queue center with:\\
+ Finite queue capacity=13\\
+ FCFS service discipline\\
+ Arrival rate $\lambda$ = 125 req/s\\
+ Service rate $\mu$ = 1/(2ms) = 500 req/s \columnbreak \begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.4\textwidth]{img/img100.png}
+    \end{center}
+\end{figure}
+\end{multicols}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{img/img101.png}
+    \caption{Queueing Networks}
+    \end{center}
+\end{figure}For many systems we can adopt a view of the system as a
+Nectowlloercktionf oqfureuseosurces and devices with customers or jobs
+ciFrocrumlaatninygsybsetetmwes ewne tchaenmadopt a\\\\We can associate a service center with each resource in the system and then route customers among the service centres\\After service at one service centre a customer may progress to other service centres, following some previously defined pattern of behaviour, corresponding to the customer’s requirement
+\begin{multicols}{2}
+    A queueing network can be represented as a graph where nodes represent the service centers k and arcs the possible transitions of users from one service center to another\\ Nodes and arcs together define the network topology\columnbreak
+    \begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img102.png}
+        \end{center}
+    \end{figure}
+\end{multicols}A network may be:\begin{itemize}
+    \item Open: customers may arrive from, or depart to, some external environment (Open Models are characterized by arrivals and departures from the system)\begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.28\textwidth]{img/img103.png}
+            \end{center}
+        \end{figure}
+    \item Closed: a fixed population of customers remain within the system (In closed models we a parameter N that accounts for the fixed population of jobs that continuously circulate inside the system)\begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.28\textwidth]{img/img104.png}
+            \end{center}
+        \end{figure}
+    \item Mixed: there are classes of customers within the system exhibiting open and closed patterns of behaviour respectively
+\end{itemize}
+\item {\bf Routing}Whenever a job, after finishing service at a station has several possible alternative routes, an appropriate selection policy must be defined\\The policy that describes how the next destination is selected is called routing\\Routing specification is required only in all the points where jobs exiting a station can have more than one destination\\The main routing algorithms that we will consider are:\begin{itemize}
+    \item {\bf Probabilistic}each path has assigned a probability of being chosen by the job that
+    left the considered station\begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.25\textwidth]{img/img105.png}
+            \end{center}
+        \end{figure}
+    \item {\bf Round robin} the destination chosen by the job rotates among all the possible exits\begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.25\textwidth]{img/img106.png}
+            \end{center}
+        \end{figure}
+    \item {\bf Join the shortest queue} jobs can query the queue length of the possible destinations, and chose
+    to move to the one with the smallest number of jobs waiting to be served\begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.25\textwidth]{img/img107.png}
+            \end{center}
+        \end{figure}
+   
+\end{itemize}
+\end{itemize}\newpage
+\subsubsection*{Open Networks: Examples}\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{img/img108.png}
+        \end{center}
+    \end{figure}A client server system, dealing with external arrivals, which is architected with three tiers: the first one includes one web server, the second tier includes one application server and the third one includes a database server\\
+    Provide a QN model of the system and evaluate the overall throughput considering that the network delay is negligible with respect to the other devices and two different cases:\\
+    1) The only thing we know is that each server should be visited by the application\\
+    2) In the second case we know that the application after visiting the web server requires some operations at the application server and then can go back to the web server and leave the system or can require service at the DBMS and then go back to the application server
+\subsubsection*{ 
+    Closed Networks: Examples}\begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.3\textwidth]{img/img109.png}
+            \end{center}
+        \end{figure}A client server system, with a finite number of customers, which is architected with three tiers: the first one includes one web server, the second tier includes one application server and the third one includes a database server.\\
+        Provide a QN model of the system and evaluate the system throughput considering that Network delay is negligible with respect to the other devices. Model the two different cases previously described.
+
+ 
+ 
 
 %------------------------------------------------------------------------%
 
